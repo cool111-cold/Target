@@ -11,6 +11,13 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		F07F204D0CAB4322A03F9E15 /* StackSansText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB9C801331164147AB5D2786 /* StackSansText-Bold.ttf */; };
+		1BE213C73CA747BD92C3B19F /* StackSansText-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD0CA513E03745D7A9E95628 /* StackSansText-ExtraLight.ttf */; };
+		AFBA9E32FCEF42CA8C752EFE /* StackSansText-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1294C4A2B2764B07B0402D82 /* StackSansText-Light.ttf */; };
+		80E1CF0D54B54BECAC009598 /* StackSansText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A18526EA8BFE4ABFBAFE18BA /* StackSansText-Medium.ttf */; };
+		A0899B114ABF4F1A9DF5EAC1 /* StackSansText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 30498D4EE7F4488C84A633B6 /* StackSansText-Regular.ttf */; };
+		EBE14E8FE00F4AA288016EF0 /* StackSansText-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DB8DE4C08D4845B868C6FB /* StackSansText-SemiBold.ttf */; };
+		E3C60387E5AF4481B3A5361C /* StackSansTextVariableFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F37FCAAC6BD64D0FB5D815D4 /* StackSansTextVariableFont.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +31,13 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = MyAndroidApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MyAndroidApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EB9C801331164147AB5D2786 /* StackSansText-Bold.ttf */ = {isa = PBXFileReference; name = "StackSansText-Bold.ttf"; path = "../assets/fonts/static/StackSansText-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AD0CA513E03745D7A9E95628 /* StackSansText-ExtraLight.ttf */ = {isa = PBXFileReference; name = "StackSansText-ExtraLight.ttf"; path = "../assets/fonts/static/StackSansText-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1294C4A2B2764B07B0402D82 /* StackSansText-Light.ttf */ = {isa = PBXFileReference; name = "StackSansText-Light.ttf"; path = "../assets/fonts/static/StackSansText-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A18526EA8BFE4ABFBAFE18BA /* StackSansText-Medium.ttf */ = {isa = PBXFileReference; name = "StackSansText-Medium.ttf"; path = "../assets/fonts/static/StackSansText-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		30498D4EE7F4488C84A633B6 /* StackSansText-Regular.ttf */ = {isa = PBXFileReference; name = "StackSansText-Regular.ttf"; path = "../assets/fonts/static/StackSansText-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		45DB8DE4C08D4845B868C6FB /* StackSansText-SemiBold.ttf */ = {isa = PBXFileReference; name = "StackSansText-SemiBold.ttf"; path = "../assets/fonts/static/StackSansText-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F37FCAAC6BD64D0FB5D815D4 /* StackSansTextVariableFont.ttf */ = {isa = PBXFileReference; name = "StackSansTextVariableFont.ttf"; path = "../assets/fonts/StackSansTextVariableFont.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +88,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				E8568B93AE7943D18939434B /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -96,6 +111,21 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		E8568B93AE7943D18939434B /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				EB9C801331164147AB5D2786 /* StackSansText-Bold.ttf */,
+				AD0CA513E03745D7A9E95628 /* StackSansText-ExtraLight.ttf */,
+				1294C4A2B2764B07B0402D82 /* StackSansText-Light.ttf */,
+				A18526EA8BFE4ABFBAFE18BA /* StackSansText-Medium.ttf */,
+				30498D4EE7F4488C84A633B6 /* StackSansText-Regular.ttf */,
+				45DB8DE4C08D4845B868C6FB /* StackSansText-SemiBold.ttf */,
+				F37FCAAC6BD64D0FB5D815D4 /* StackSansTextVariableFont.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -159,6 +189,13 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				F07F204D0CAB4322A03F9E15 /* StackSansText-Bold.ttf in Resources */,
+				1BE213C73CA747BD92C3B19F /* StackSansText-ExtraLight.ttf in Resources */,
+				AFBA9E32FCEF42CA8C752EFE /* StackSansText-Light.ttf in Resources */,
+				80E1CF0D54B54BECAC009598 /* StackSansText-Medium.ttf in Resources */,
+				A0899B114ABF4F1A9DF5EAC1 /* StackSansText-Regular.ttf in Resources */,
+				EBE14E8FE00F4AA288016EF0 /* StackSansText-SemiBold.ttf in Resources */,
+				E3C60387E5AF4481B3A5361C /* StackSansTextVariableFont.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

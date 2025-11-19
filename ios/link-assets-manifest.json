@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/StackSansTextVariableFont.ttf",
+      "sha1": "f3b5d60b402ad8ea108bfb0fe1210da00f0763f5"
+    },
+    {
+      "path": "assets/fonts/static/StackSansText-Bold.ttf",
+      "sha1": "3344069bd8e2b7175a25d70d3e3fab950b726d6a"
+    },
+    {
+      "path": "assets/fonts/static/StackSansText-ExtraLight.ttf",
+      "sha1": "d48cf203c6ba954025c4a916d9340af1f346e1a1"
+    },
+    {
+      "path": "assets/fonts/static/StackSansText-Light.ttf",
+      "sha1": "3664bbc1980d4d4cae7a8dcf3f18a9d37e09e468"
+    },
+    {
+      "path": "assets/fonts/static/StackSansText-Medium.ttf",
+      "sha1": "89eeebb3c7f9209246bc299b0ca2d0698baaf917"
+    },
+    {
+      "path": "assets/fonts/static/StackSansText-Regular.ttf",
+      "sha1": "dde231233408a35fa28d476f014b9445112623c2"
+    },
+    {
+      "path": "assets/fonts/static/StackSansText-SemiBold.ttf",
+      "sha1": "97cfe0df3cd87bbb2c0fe16084e6d4ef65c6fad0"
+    }
+  ]
+}
