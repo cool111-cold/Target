@@ -1,6 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { ProjectColors } from "../../../../assets/colors"
-import { useState } from "react"
 
 interface ChoiceProps {
     name: string
@@ -25,9 +24,13 @@ const Choice = ({name, active, setActive}: ChoiceProps) => {
     )
 }
 
-export const ChoiceBar = () => {
+interface ChoiceBarProps {
+    active: string;
+    setActive: (value: string) => void;
+}
+
+export const ChoiceBar = ({active, setActive}: ChoiceBarProps) => {
     const barValue = ['Daily', 'Disposable', 'All'];
-    const [active, setActive] = useState(barValue[0]);
     return (
         <View style={styles.choiceList}>
             {barValue.map((item, index) => (

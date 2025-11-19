@@ -3,15 +3,45 @@ import { CalendarBlock } from "../main/components/calendar";
 import { ChoiceBar } from "./components/choice-bar";
 import { Ephir } from "./components/ephir";
 import { TargetList } from "./components/target-list";
+import { useState } from "react";
+
+const TestData: Array<{
+    name: string;
+    ball: number;
+    data: string;
+    ephir: number;
+    type: 'Daily' | 'Disposable';
+}> = [
+  {
+      name: 'Зал',
+      ball: 3,
+      data: '12.12.2025',
+      ephir: 90,
+      type: 'Daily'
+  },
+  {
+      name: 'Доделать бота',
+      ball: 10,
+      data: '12.12.2025',
+      ephir: 50,
+      type: 'Disposable'
+  },
+]
 
 export const TargetPage = () => {
+    const [activeFilter, setActiveFilter] = useState('Daily');
+
+    const filteredData = activeFilter === 'All'
+        ? TestData
+        : TestData.filter(item => item.type === activeFilter);
+
     return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <CalendarBlock />
-        <ChoiceBar />
+        <ChoiceBar active={activeFilter} setActive={setActiveFilter} />
         <Ephir />
-        <TargetList />
+        <TargetList Data={filteredData} />
       </ScrollView>
     </View>
     )

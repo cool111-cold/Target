@@ -7,3 +7,6 @@ export * from './pizza';
 export * from './home';
 export * from './cupon';
 export * from './info';
+export * from './ephir';
+export * from './pen';
+export * from './save';

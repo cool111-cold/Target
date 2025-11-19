@@ -1,11 +1,29 @@
-import { Dimensions, ScrollView, StyleSheet, Text, Vibration, View } from "react-native"
+import { Animated, Dimensions, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native"
 import { ProjectColors } from "../../../../assets/colors";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { EphirIcon, SaveIcon } from "../../../../assets/icons";
+import { Modal } from "../../../feauters/modal";
 
 const { width } = Dimensions.get('window');
 
-const Target = () => {
+interface Data {
+    name: string;
+    ball: number;
+    ephir: number;
+    data: string;
+    type: 'Daily' | 'Disposable'
+}
+
+interface TargetProps {
+    item: Data;
+}
+
+const Target = ({item}: TargetProps) => {
+
     const scrollViewRef = useRef<ScrollView>(null);
+    const [ephirState, setEphirState] = useState(item.ephir);
+    const [isModal, setIsModal] = useState(false);
+    const shakeAnimation = useRef(new Animated.Value(0)).current;
 
     const handleScrollEnd = (event: any) => {
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
@@ -14,12 +32,93 @@ const Target = () => {
 
         if (scrollPosition >= maxScroll - 5) {
             console.log('Скролл достиг конца!');
+            setEphirState(0);
             Vibration.vibrate(10);
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
         } else {
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
         }
     };
+
+    useEffect(() => {
+        if (ephirState >= 100) {
+            Animated.sequence([
+                Animated.timing(shakeAnimation, {
+                    toValue: 1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: -1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: 1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: -1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: 1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: -1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: 1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: -1,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(shakeAnimation, {
+                    toValue: 0,
+                    duration: 20,
+                    useNativeDriver: true,
+                }),
+            ]).start();
+        }
+    }, [ephirState]);
+
+    const handlePressEphir = () => {
+        if (ephirState < 90) {
+            Vibration.vibrate(10);
+        }else{
+            Vibration.vibrate(100);
+        }
+
+        setEphirState((e) => e+=10)
+    }
+
+    const handleLongPress = () => {
+        Vibration.vibrate(10);
+        setIsModal(true);
+    }
+
+    const EphirButton = () => {
+
+        if (ephirState > 90) return;
+
+        return (
+            <TouchableOpacity 
+                onPress={handlePressEphir}
+                style={{position: 'absolute', bottom: 12, right: 12}}>
+                <EphirIcon size={45} color={ProjectColors.purple} />
+            </TouchableOpacity>
+        )
+    }
 
     return (
         <ScrollView
@@ -29,28 +128,40 @@ const Target = () => {
             onScrollEndDrag={handleScrollEnd}
             onMomentumScrollEnd={handleScrollEnd}
         >
-            <View style={styles.scroll}>
-                <View style={styles.targetContainer}>
-                    <Text style={styles.textValue}>Зал</Text>
-                    <Text style={styles.ephirText}>3</Text>
-                    <Text style={styles.text}>12.12.1212</Text>
+            <Animated.View style={[styles.scroll, {
+                transform: [{ translateX: shakeAnimation }]
+            }]}>
+                <Pressable style={[styles.targetContainer, {borderColor: ephirState > 90 ? ProjectColors.purple : ProjectColors.white}]} onLongPress={handleLongPress}>
+                    <Text style={styles.textValue}>{item.name}</Text>
+                    <Text style={styles.ephirText}>{item.ball}</Text>
+                    <Text style={styles.text}>{item.data}</Text>
+                    
+                    <EphirButton />
 
-                    <View style={[styles.progressBarBottom, {width: '80%'}]}/>
+                    {ephirState <= 90 && <View style={[styles.progressBarBottom, {width: `${ephirState}%`}]}/>}
 
-                </View>
+                </Pressable>
                 <View style={styles.saveContainer}>
-
+                    <SaveIcon color={ProjectColors.black} />
                 </View>
-            </View>
+            </Animated.View>
+
+            <Modal title="Change" message="Do you want change target?" buttonTitle="Yes, change" visible={isModal} onClose={() => setIsModal(false)}/>
         </ScrollView>
 
     )
 }
 
-export const TargetList = () => {
+interface TargetListProps {
+    Data: Data[]
+}
+
+export const TargetList = ({Data}: TargetListProps) => {
     return (
         <View style={styles.container}>
-            <Target />
+            {Data.map((item, index) => (
+                <Target key={index} item={item as any}/>
+            ))}
         </View>
     )
 }
@@ -64,9 +175,12 @@ const styles = StyleSheet.create({
     },
     saveContainer: {
         width: 80,
-        height: '100%',
+        height: 130,
         backgroundColor: ProjectColors.lightGrey,
         borderRadius: 15,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     targetContainer: {
         width: width - 48,
@@ -77,14 +191,16 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        borderWidth: 2,
 
     },
     scroll: {
         width: width+48, 
         display: 'flex', 
         flexDirection: 'row', 
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginBottom: 12
     },
     valueContainer: {
         display: 'flex',
