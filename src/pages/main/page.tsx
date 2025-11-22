@@ -2,12 +2,11 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Anima
 import { CalendarBlock } from "./components/calendar";
 import { MainTasks } from "./components/main-tasks";
 import { LinksBlock } from "./components/links-block";
-// import { BalanceSlider } from "./components/balance-slider";
 import { TestBlock } from "./components/test-block";
 import { useEffect, useRef, useState } from "react";
 import { CloseGift, OpenGift } from '../../../assets/icons';
 import { Gift } from './components/gift';
-import { TabBar } from './components/tab-bar';
+import { useRandomGift } from '../../hooks/use-random-gift';
 
 const { width } = Dimensions.get('window');
 
@@ -34,6 +33,8 @@ const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
     setHasGift(false);
     setIsClick(false);
   }
+
+  const prizes = useRandomGift();
   
 
 
@@ -58,9 +59,9 @@ const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
           { transform: [{ translateY: slideAnim }], height: isClick ? 75 : 0, marginBottom: isClick ? 12 : 0}
         ]}
       > 
-      <Gift onTake={takeGift}/>
-      <Gift onTake={takeGift}/>
-      <Gift onTake={takeGift}/>
+      <Gift onTake={takeGift} prize={prizes[0]}/>
+      <Gift onTake={takeGift} prize={prizes[1]}/>
+      <Gift onTake={takeGift} prize={prizes[2]}/>
       </Animateds.View>
     </View>
   );

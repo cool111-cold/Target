@@ -5,11 +5,17 @@ import { CloseGift } from "../../../../assets/icons";
 import { ProjectColors } from "../../../../assets/colors";
 import { Modal } from "../../../feauters/modal";
 
+
+interface Prize {
+  value: string;
+  coll: number
+}
 interface GiftProps {
   onTake: () => void;
+  prize: Prize;
 }
 
-export const Gift = ({ onTake }: GiftProps) => {
+export const Gift = ({ onTake, prize }: GiftProps) => {
   const rotation = useSharedValue(0); 
 
   useEffect(() => {
@@ -43,7 +49,7 @@ export const Gift = ({ onTake }: GiftProps) => {
           <CloseGift color='#DFDEDA'/>
         </Animated.View>
       </TouchableOpacity>
-      <Modal title={'Great! you got'} message={'x'} buttonTitle={'Get'} visible={modalVisible} onClose={handleTakeGift}/>
+      <Modal title={'Great! you got'} message={`${prize.value} x${prize.coll}`} buttonTitle={'Get'} visible={modalVisible} onClose={handleTakeGift}/>
     </>
   )
 }

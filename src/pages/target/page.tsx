@@ -11,20 +11,23 @@ const TestData: Array<{
     data: string;
     ephir: number;
     type: 'Daily' | 'Disposable';
+    color: number;
 }> = [
   {
       name: 'Зал',
       ball: 3,
       data: '12.12.2025',
       ephir: 90,
-      type: 'Daily'
+      type: 'Daily',
+      color: 0
   },
   {
       name: 'Доделать бота',
       ball: 10,
       data: '12.12.2025',
       ephir: 50,
-      type: 'Disposable'
+      type: 'Disposable',
+      color: 5
   },
 ]
 

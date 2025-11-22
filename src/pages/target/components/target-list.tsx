@@ -12,11 +12,14 @@ interface Data {
     ephir: number;
     data: string;
     type: 'Daily' | 'Disposable'
+    color: number;
 }
 
 interface TargetProps {
     item: Data;
 }
+
+const colors = ['#885053', '#d5583c', '#787da7', '#393939', '#9ca2dc', '#9ec687', '#358ca3', '#ccc73b', '#1a2f3a']
 
 const Target = ({item}: TargetProps) => {
 
@@ -131,7 +134,7 @@ const Target = ({item}: TargetProps) => {
             <Animated.View style={[styles.scroll, {
                 transform: [{ translateX: shakeAnimation }]
             }]}>
-                <Pressable style={[styles.targetContainer, {borderColor: ephirState > 90 ? ProjectColors.purple : ProjectColors.white}]} onLongPress={handleLongPress}>
+                <Pressable style={[styles.targetContainer, {borderColor: ephirState > 90 ? ProjectColors.purple : ProjectColors.white, backgroundColor: colors[item.color]}]} onLongPress={handleLongPress}>
                     <Text style={styles.textValue}>{item.name}</Text>
                     <Text style={styles.ephirText}>{item.ball}</Text>
                     <Text style={styles.text}>{item.data}</Text>
@@ -185,14 +188,14 @@ const styles = StyleSheet.create({
     targetContainer: {
         width: width - 48,
         height: 130,
-        backgroundColor: ProjectColors.lightGrey,
+        backgroundColor: '#1a2f3a',
         borderRadius: 15,
         paddingHorizontal: 16,
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
-        borderWidth: 2,
+        borderWidth: 3,
 
     },
     scroll: {
@@ -211,27 +214,27 @@ const styles = StyleSheet.create({
         fontFamily: 'StackSansTextVariableFont',
         fontWeight: '700',
         fontSize: 60,
-        color: ProjectColors.black,
+        color: ProjectColors.white,
         marginTop: -12
     },
     text: {
         fontFamily: 'StackSansTextVariableFont',
         fontWeight: '600',
         fontSize: 14,
-        color: ProjectColors.grey
+        color: ProjectColors.lightGrey
     },
     textValue: {
         fontFamily: 'StackSansTextVariableFont',
         fontWeight: '700',
         fontSize: 24,
-        color: ProjectColors.black
+        color: ProjectColors.white
     },
     progressBarBottom: {
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-        height: 2,
+        height: 3,
         backgroundColor: ProjectColors.purple
     }
 });
