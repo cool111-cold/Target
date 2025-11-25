@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type RootStackParamList = {
     Home: undefined;
     Target: undefined;
+    Prize: undefined;
 };
 
 
@@ -23,7 +24,7 @@ const BLock = ({type}: BLockProps) => {
     const navigation = useNavigation<NavigationProp>();
     return (
         // <TouchableOpacity style={[styles.block, {backgroundColor: isType ? COLORS[2] : COLORS[0]}]}>
-        <TouchableOpacity  onPress={() => navigation.navigate('Target')} style={[styles.block, {backgroundColor: isType ? ProjectColors.black : ProjectColors.white}]}>
+        <TouchableOpacity  onPress={() => navigation.navigate(isType ? 'Target' : 'Prize')} style={[styles.block, {backgroundColor: isType ? ProjectColors.black : ProjectColors.white}]}>
             {isType ? <Target color={COLORS[1]} /> : <Pizza color={COLORS[0]}/>}
             <Text style={[styles.text, {color: isType ? COLORS[1] : COLORS[0]}]}>{isType ? "Target" : "Prize"}</Text>
             <Text style={[styles.miniText, {color: isType ? COLORS[1] : COLORS[0]}]}>12 points</Text>           
