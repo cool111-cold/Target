@@ -3,20 +3,23 @@ import { ProjectColors } from "../../../../assets/colors";
 import { Target, Pizza } from "../../../../assets/icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAppStore } from "../../../hooks/store";
 type RootStackParamList = {
     Home: undefined;
     Target: undefined;
     Prize: undefined;
+    Create: undefined;
 };
 
 
 interface BLockProps {
     type: 'target' | 'prize';
+    points?: number;
 }
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const BLock = ({type}: BLockProps) => {
+const BLock = ({type, points = 0}: BLockProps) => {
     // const COLORS = ['#ff6fd8', '#2575fc', '#6a11cb'];
     const COLORS = ['#e53b3b', '#a774c3', '#444245'];
     const isType = type === 'target';
@@ -27,15 +30,16 @@ const BLock = ({type}: BLockProps) => {
         <TouchableOpacity  onPress={() => navigation.navigate(isType ? 'Target' : 'Prize')} style={[styles.block, {backgroundColor: isType ? ProjectColors.black : ProjectColors.white}]}>
             {isType ? <Target color={COLORS[1]} /> : <Pizza color={COLORS[0]}/>}
             <Text style={[styles.text, {color: isType ? COLORS[1] : COLORS[0]}]}>{isType ? "Target" : "Prize"}</Text>
-            <Text style={[styles.miniText, {color: isType ? COLORS[1] : COLORS[0]}]}>12 points</Text>           
+            <Text style={[styles.miniText, {color: isType ? COLORS[1] : COLORS[0]}]}>{`${points} points`}</Text>           
         </TouchableOpacity>
     )
 }
 
 export const LinksBlock = () => {
+    const userData = useAppStore((e) => e.userData);
     return (
         <View style={styles.contsiner}>
-            <BLock type='target'/>
+            <BLock type='target' points={userData?.targets?.length}/>
             <BLock type='prize' />
         </View>
     )

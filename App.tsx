@@ -6,13 +6,24 @@ import { TargetPage } from './src/pages/target/page';
 import { Layout } from './src/components/layout';
 import { CuponPage } from './src/pages/cupon/page';
 import { PrizePage } from './src/pages/prize/page';
+import { CreatePage } from './src/pages/create/page';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [hideTabBar, setHideTabBar] = React.useState(false);
+  const navigationRef = React.useRef(null);
+  const hideBarPages = ['Create']
   return (
-    <NavigationContainer>
-      <Layout>
+    <NavigationContainer
+      ref={navigationRef}
+      onStateChange={() => {
+        // @ts-ignore
+        const currentRoute = navigationRef.current?.getCurrentRoute();
+        setHideTabBar(hideBarPages.includes(currentRoute?.name))
+      }}
+    >
+      <Layout hide={hideTabBar}>
         <Stack.Navigator screenOptions={{ 
           headerShown: false,
           animation: 'fade'
@@ -21,6 +32,7 @@ export default function App() {
           <Stack.Screen name="Target" component={TargetPage} />
           <Stack.Screen name="Cupons" component={CuponPage} />
           <Stack.Screen name="Prize" component={PrizePage} />
+          <Stack.Screen name="Create" component={CreatePage} />
         </Stack.Navigator>
       </Layout>
     </NavigationContainer>

@@ -4,13 +4,14 @@ import { ReactNode } from 'react';
 
 interface LayoutProps {
   children: ReactNode;
+  hide?: boolean;
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children, hide }: LayoutProps) => {
   return (
     <View style={styles.container}>
       {children}
-      <TabBar />
+      {!hide && <TabBar />}
     </View>
   );
 };

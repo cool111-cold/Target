@@ -4,6 +4,7 @@ import { ChoiceBar } from "../target/components/choice-bar";
 import { useState } from "react";
 import { Balance } from "./components/balance";
 import { PrizeList } from "./components/prize-list";
+import { AddButton } from "../../components/add-button";
 
 const TestData: Array<{
     name: string;
@@ -39,6 +40,7 @@ export const PrizePage = () => {
         <Balance />
         <PrizeList Data={filteredData}/>
       </ScrollView>
+      <AddButton />
     </View>
     )
 }

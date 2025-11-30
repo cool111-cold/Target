@@ -40,9 +40,11 @@ const Target = ({item}: TargetProps) => {
             Vibration.vibrate(10);
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
             setEphirState(0);
+            // @ts-ignore
             setUserData({
                 xp: (userData?.xp ?? 0) + 10,
                 ball: (userData?.ball ?? 0) + item.ball,
+                ephir: (userData?.ephir ?? 0),
                 data: userData?.data ?? new Date().toLocaleDateString("ru-RU").toString(),
                 history: [
                   ...(userData?.history ?? []),
@@ -52,7 +54,8 @@ const Target = ({item}: TargetProps) => {
                     price: item.ball,
                     type: 'target'
                   }
-                ]
+                ],
+                targets: userData?.targets ?? []
             });
         } else {
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });

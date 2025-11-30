@@ -8,12 +8,22 @@ interface historyItem {
     price: string | number;
 }
 
+interface targetData {
+    name: string;
+    ball: number;
+    ephir: number;
+    data: string;
+    type: 'Daily' | 'Disposable'
+    color: number;
+}
+
 export interface UserData {
     xp: number;
     ball: number;
     data: string;
     history: historyItem[];
     ephir: number;
+    targets: targetData[] | undefined;
   }
 
 interface AppState {
