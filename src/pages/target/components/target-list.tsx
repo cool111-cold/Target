@@ -3,6 +3,7 @@ import { ProjectColors } from "../../../../assets/colors";
 import { useEffect, useRef, useState } from "react";
 import { EphirIcon, SaveIcon } from "../../../../assets/icons";
 import { Modal } from "../../../feauters/modal";
+import { useAppStore } from "../../../hooks/store";
 
 const { width } = Dimensions.get('window');
 
@@ -27,6 +28,8 @@ const Target = ({item}: TargetProps) => {
     const [ephirState, setEphirState] = useState(item.ephir);
     const [isModal, setIsModal] = useState(false);
     const shakeAnimation = useRef(new Animated.Value(0)).current;
+    const userData = useAppStore((s) => s.userData);
+    const setUserData = useAppStore((s) => s.setUserData);
 
     const handleScrollEnd = (event: any) => {
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
@@ -34,10 +37,23 @@ const Target = ({item}: TargetProps) => {
         const maxScroll = contentSize.width - layoutMeasurement.width;
 
         if (scrollPosition >= maxScroll - 5) {
-            console.log('Скролл достиг конца!');
-            setEphirState(0);
             Vibration.vibrate(10);
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
+            setEphirState(0);
+            setUserData({
+                xp: (userData?.xp ?? 0) + 10,
+                ball: (userData?.ball ?? 0) + item.ball,
+                data: userData?.data ?? new Date().toLocaleDateString("ru-RU").toString(),
+                history: [
+                  ...(userData?.history ?? []),
+                  {
+                    name: item.name,
+                    date: new Date().toLocaleDateString("ru-RU").toString(),
+                    price: item.ball,
+                    type: 'target'
+                  }
+                ]
+            });
         } else {
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
         }

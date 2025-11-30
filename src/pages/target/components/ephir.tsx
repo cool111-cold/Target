@@ -3,6 +3,7 @@ import { ProjectColors } from "../../../../assets/colors";
 import { InfoIcon } from "../../../../assets/icons";
 import { useState } from "react";
 import { Modal } from "../../../feauters/modal";
+import { useAppStore } from "../../../hooks/store";
 
 export const Ephir = () => {
 
@@ -11,6 +12,10 @@ export const Ephir = () => {
     const handlePress = () => {
         setIsModal(true);
     }
+
+    const userData = useAppStore((s) => s.userData);
+    const ephirState = userData?.ephir || 0;
+    
 
     return (
         <View style={styles.container}>
@@ -24,7 +29,7 @@ export const Ephir = () => {
                 </View>
             </Pressable>
             <Text style={styles.text}>Ethereum</Text>
-            <Text style={styles.textValue}>0</Text>
+            <Text style={styles.textValue}>{ephirState}</Text>
 
             <Modal title="Ethereum" message="Ethereum is needed to increase the number of points received for completing goals." buttonTitle="Great!" onClose={() => setIsModal(false)} visible={isModal} />
         </View>

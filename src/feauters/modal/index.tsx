@@ -7,12 +7,13 @@ import { ShowHuman } from "../../../assets/icons";
 interface ModalProps {
     visible: boolean;
     onClose: () => void,
+    onConfirm?: () => void,
     title: string,
     message: string,
     buttonTitle: string
 }
 
-export const Modal = ({visible, onClose, title, message, buttonTitle}: ModalProps) => {
+export const Modal = ({visible, onClose, title, message, buttonTitle, onConfirm}: ModalProps) => {
     return (
         <ModalBase
             visible={visible}
@@ -28,7 +29,7 @@ export const Modal = ({visible, onClose, title, message, buttonTitle}: ModalProp
                     <ShowHuman />
                     <Text style={styles.title}>{title}</Text>
                     <Text style={styles.message}>{message}</Text>
-                    <Button title={buttonTitle} containerStyle={styles.button} onClick={onClose}/>
+                    <Button title={buttonTitle} containerStyle={styles.button} onClick={onConfirm ? onConfirm : onClose}/>
                 </Pressable>
             </Pressable>
         </ModalBase>

@@ -1,12 +1,17 @@
 import { StyleSheet, Text, View } from "react-native"
 import { ProjectColors } from "../../../../assets/colors";
+import { useAppStore } from "../../../hooks/store";
 
 export const Balance = () => {
+
+    const userData = useAppStore((s) => s.userData);
+    const currentBalance = userData?.ball || 0;
+    
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Balance</Text>
-            <Text style={styles.textValue}>32</Text>
+            <Text style={styles.textValue}>{currentBalance}</Text>
         </View>
     )
 }

@@ -3,6 +3,7 @@ import { ProjectColors } from "../../../../assets/colors"
 import { Pizza, Target } from "../../../../assets/icons"
 import React, { useState } from "react"
 import { Modal } from "../../../feauters/modal";
+import { useAppStore } from "../../../hooks/store";
 
 interface TaskProps {
     name: string;
@@ -27,11 +28,13 @@ const Task = ({ name, date, type, price }: TaskProps) => {
     const isTarget = type === 'target';
 
     const [visibleModal, setVisibleModal] = useState(false);
+    const clearUserData = useAppStore((s) => s.clearUserData);
 
     const handleHoldPress = () => {
         Vibration.vibrate(10);
         setVisibleModal(true);
     }
+    
     return (
         <>
         <Pressable onLongPress={handleHoldPress}>
@@ -53,7 +56,14 @@ const Task = ({ name, date, type, price }: TaskProps) => {
         </View>
         </Pressable>
 
-        <Modal buttonTitle="Deleted" message="Are you sure you want to delete the operation?" onClose={() => setVisibleModal(false)} title="Delete operation?" visible={visibleModal}/>
+        <Modal 
+            buttonTitle="Deleted" 
+            message="Are you sure you want to delete the operation?" 
+            onClose={() => setVisibleModal(false)} 
+            title="Delete operation?" 
+            visible={visibleModal}
+            onConfirm={clearUserData}
+        />
         </>
     )
 }
@@ -78,33 +88,35 @@ const TaskList = ({list}: TrackListProps) => {
 }
 
 export const MainTasks = () => {
-    const testData = [
-    {
-        name: 'Чипсы',
-        date: '21.12.2025 18:00',
-        type: 'prize',
-        price: 30
-    },
-    {
-        name: 'Зал',
-        date: '21.12.2025 18:00',
-        type: 'target',
-        price: 3
-    },
-    {
-        name: 'Чипсы',
-        date: '21.12.2025 18:00',
-        type: 'prize',
-        price: 30
-    },
-    {
-        name: 'Зал',
-        date: '21.12.2025 18:00',
-        type: 'target',
-        price: 3
-    },
-    ];
-    const EmptyTestData = [];
+    // const testData = [
+    // {
+    //     name: 'Чипсы',
+    //     date: '21.12.2025 18:00',
+    //     type: 'prize',
+    //     price: 30
+    // },
+    // {
+    //     name: 'Зал',
+    //     date: '21.12.2025 18:00',
+    //     type: 'target',
+    //     price: 3
+    // },
+    // {
+    //     name: 'Чипсы',
+    //     date: '21.12.2025 18:00',
+    //     type: 'prize',
+    //     price: 30
+    // },
+    // {
+    //     name: 'Зал',
+    //     date: '21.12.2025 18:00',
+    //     type: 'target',
+    //     price: 3
+    // },
+    // ];
+    const userData = useAppStore((s) => s.userData);
+    const testData = userData?.history ?? []
+    
     return (
         <View style={styles.container}>
             <Text style={styles.miniText}>Recent</Text>

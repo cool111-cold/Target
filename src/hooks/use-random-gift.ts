@@ -5,7 +5,7 @@ const Prize = {
     },
     "2": {
         value: ['ball', 'def cupon'],
-        coll: [2, 4, 6]
+        coll: [5, 7, 10]
     },
     "3": {
         value: ['cupon'],

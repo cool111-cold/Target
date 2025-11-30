@@ -8,7 +8,8 @@ const { width } = Dimensions.get('window');
 const COLORS = ['#ff6fd8', '#2575fc', '#6a11cb'];
 
 const date = new Date();
-const isTimeToTest = date.getHours() >= 21;
+const hours = date.getHours();
+const isTimeToTest = hours >= 21 || hours <= 2;
 
 
 export const TestBlock = () => {

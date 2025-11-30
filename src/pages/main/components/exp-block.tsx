@@ -1,33 +1,33 @@
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import { CalendarBlock } from "./components/calendar";
-import { MainTasks } from "./components/main-tasks";
-import { LinksBlock } from "./components/links-block";
-import { TestBlock } from "./components/test-block";
-import { useEffect } from "react";
-import { useAppStore } from '../../hooks/store';
-import { BalanceSlider } from './components/balance-slider';
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { CloseGift, OpenGift } from "../../../../assets/icons";
+import { useAppStore } from "../../../hooks/store";
 
-const { width } = Dimensions.get('window');
+export const ExpBlock = () => {
+  const hasGift = false;
+  const COLORS = ['#e53b3b', '#a774c3', '#444245'];
+  const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
 
-export const MainPage = () => {
-    const loadUserData = useAppStore((s) => s.loadUserData);
-
-    useEffect(() => {
-      loadUserData()
-    }, []);
-
-    return (
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <CalendarBlock />
-        <BalanceSlider />
-        <TestBlock />
-        <LinksBlock />
-        <MainTasks />
-      </ScrollView>
+  const userData = useAppStore((s) => s.userData);
+  const exp = userData?.xp ?? 0;
+  const targetExp = 100;
+  return (
+    <View style={styles.balanceEXPBlockWrapper}>
+      <TouchableOpacity onPress={() => console.log('///')}>
+        <View style={styles.balanceContent}>
+          {hasGift && <View style={styles.redPoint} />}
+          <View style={styles.giftEXPBlock}>
+              {hasGift ? <CloseGift color='#DFDEDA'/> : <OpenGift />}
+          </View>
+          
+          <Text style={styles.balanceEXPText}>{`${exp}/${targetExp}`}</Text>
+          <View style={{width: '100%', height: 24, marginTop: 24, borderRadius: 10, borderColor: '#121212', borderWidth: 2, overflow: 'hidden'}}>
+            <View style={{height: 24, backgroundColor: randomColor, width: `${exp / (targetExp / 100)}%`}} />
+          </View>
+        </View>
+      </TouchableOpacity>
     </View>
-    )
-}
+  );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -85,10 +85,6 @@ const styles = StyleSheet.create({
       backgroundColor: '#DFDEDA',
       borderColor: '#121212',
       borderWidth: 2
-    },
-    gradient: {
-      width: width * 2,
-      height: 150,
     },
     balanceContent: {
       // ...StyleSheet.absoluteFillObject,
