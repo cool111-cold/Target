@@ -28,8 +28,8 @@ const Target = ({item}: TargetProps) => {
     const [ephirState, setEphirState] = useState(item.ephir);
     const [isModal, setIsModal] = useState(false);
     const shakeAnimation = useRef(new Animated.Value(0)).current;
-    const userData = useAppStore((s) => s.userData);
-    const setUserData = useAppStore((s) => s.setUserData);
+    const incrementRewards = useAppStore((s) => s.incrementRewards);
+    const addHistoryItem = useAppStore((s) => s.addHistoryItem);
 
     const handleScrollEnd = (event: any) => {
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
@@ -40,22 +40,13 @@ const Target = ({item}: TargetProps) => {
             Vibration.vibrate(10);
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
             setEphirState(0);
-            // @ts-ignore
-            setUserData({
-                xp: (userData?.xp ?? 0) + 10,
-                ball: (userData?.ball ?? 0) + item.ball,
-                ephir: (userData?.ephir ?? 0),
-                data: userData?.data ?? new Date().toLocaleDateString("ru-RU").toString(),
-                history: [
-                  ...(userData?.history ?? []),
-                  {
-                    name: item.name,
-                    date: new Date().toLocaleDateString("ru-RU").toString(),
-                    price: item.ball,
-                    type: 'target'
-                  }
-                ],
-                targets: userData?.targets ?? []
+
+            incrementRewards(10, item.ball);
+            addHistoryItem({
+                name: item.name,
+                date: new Date().toLocaleDateString("ru-RU").toString(),
+                price: item.ball,
+                type: 'target'
             });
         } else {
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });

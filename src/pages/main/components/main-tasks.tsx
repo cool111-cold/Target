@@ -10,6 +10,7 @@ interface TaskProps {
     date: string;
     type: 'target' | 'prize';
     price: string | number;
+    index: number;
 }
 
 interface TrackListProps {
@@ -24,15 +25,20 @@ const EmptyBLock = () => {
     )
 }
 
-const Task = ({ name, date, type, price }: TaskProps) => {
+const Task = ({ name, date, type, price, index }: TaskProps) => {
     const isTarget = type === 'target';
 
     const [visibleModal, setVisibleModal] = useState(false);
-    const clearUserData = useAppStore((s) => s.clearUserData);
+    const removeHistoryItem = useAppStore((s) => s.removeHistoryItem);
 
     const handleHoldPress = () => {
         Vibration.vibrate(10);
         setVisibleModal(true);
+    }
+
+    const handleDelete = () => {
+        removeHistoryItem(index);
+        setVisibleModal(false);
     }
     
     return (
@@ -56,13 +62,13 @@ const Task = ({ name, date, type, price }: TaskProps) => {
         </View>
         </Pressable>
 
-        <Modal 
-            buttonTitle="Deleted" 
-            message="Are you sure you want to delete the operation?" 
-            onClose={() => setVisibleModal(false)} 
-            title="Delete operation?" 
+        <Modal
+            buttonTitle="Deleted"
+            message="Are you sure you want to delete the operation?"
+            onClose={() => setVisibleModal(false)}
+            title="Delete operation?"
             visible={visibleModal}
-            onConfirm={clearUserData}
+            onConfirm={handleDelete}
         />
         </>
     )
@@ -75,12 +81,13 @@ const TaskList = ({list}: TrackListProps) => {
     return(
         <View style={{marginTop: 6}}>
             {list.map((item, index) => (
-                <Task 
-                    key={index} 
-                    name={item.name} 
+                <Task
+                    key={index}
+                    name={item.name}
                     date={item.date}
                     price={item.price}
                     type={item.type}
+                    index={item.index}
                 />
             ))}
         </View>
@@ -88,41 +95,17 @@ const TaskList = ({list}: TrackListProps) => {
 }
 
 export const MainTasks = () => {
-    // const testData = [
-    // {
-    //     name: 'Чипсы',
-    //     date: '21.12.2025 18:00',
-    //     type: 'prize',
-    //     price: 30
-    // },
-    // {
-    //     name: 'Зал',
-    //     date: '21.12.2025 18:00',
-    //     type: 'target',
-    //     price: 3
-    // },
-    // {
-    //     name: 'Чипсы',
-    //     date: '21.12.2025 18:00',
-    //     type: 'prize',
-    //     price: 30
-    // },
-    // {
-    //     name: 'Зал',
-    //     date: '21.12.2025 18:00',
-    //     type: 'target',
-    //     price: 3
-    // },
-    // ];
     const userData = useAppStore((s) => s.userData);
-    const testData = userData?.history ?? []
+    const testData = (userData?.history ?? []).map((item, index) => ({
+        ...item,
+        index
+    }))
     
     return (
         <View style={styles.container}>
             <Text style={styles.miniText}>Recent</Text>
             <Text style={styles.text}>Transactions</Text>
             <TaskList list={testData} />
-            {/* <TaskList list={EmptyTestData} /> */}
         </View>
     )
 }

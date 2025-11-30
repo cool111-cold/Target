@@ -52,9 +52,7 @@ export const CreatePage = () => {
         });
     };
 
-    const userData = useAppStore((s) => s.userData);
-
-    const setUserData = useAppStore((s) => s.setUserData);
+    const addTarget = useAppStore((s) => s.addTarget);
 
     const navigation = useNavigation<NavigationProp>();
 
@@ -66,50 +64,20 @@ export const CreatePage = () => {
             answers.forEach(answer => {
                 console.log(`Вопрос ${answer.questionId}: выбран вариант ${answer.value}`);
             });
-            // @ts-ignore
-            // setUserData({
-            //     ...userData,
-            //     // @ts-ignore
-            //     targets: [...userData?.targets, {
-            //         name: answers[1].value,
-            //         ball: answers[2].value,
-            //         ephir: 0,
-            //         data: '12.10.2025',
-            //         type: answers[0].value,
-            //         color: 0
-            //     }]
-            // })
-            setUserData({
-                xp: (userData?.xp ?? 0),
-                ball: (userData?.ball ?? 0),
-                ephir: (userData?.ephir ?? 0),
-                data: userData?.data ?? new Date().toLocaleDateString("ru-RU").toString(),
-                history: userData?.history ?? [],
-                targets: [
-                    ...(userData?.targets ?? []),
-                    {
-                      name: answers[1].value,
-                      data: new Date().toLocaleDateString("ru-RU").toString(),
-                      ball: answers[2].value,
-                      type: answers[0].value,
-                      color: 0,
-                      ephir: 0
-                    }
-                  ]
+            addTarget({
+                name: answers[1].value,
+                data: new Date().toLocaleDateString("ru-RU").toString(),
+                ball: answers[2].value,
+                type: answers[0].value,
+                color: 0,
+                ephir: 0
             });
 
-            navigation.navigate('Target')
+            navigation.replace('Target')
         } else {
             setCurrentLabel((e) => e + 1);
         }
     };
-
-    // name: string;
-    // ball: number;
-    // ephir: number;
-    // data: string;
-    // type: 'Daily' | 'Disposable'
-    // color: number;
 
     return (
     <View style={styles.container}>
