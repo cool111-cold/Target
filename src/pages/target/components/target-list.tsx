@@ -34,8 +34,12 @@ const Target = ({item, index}: TargetProps) => {
     const incrementRewards = useAppStore((s) => s.incrementRewards);
     const addHistoryItem = useAppStore((s) => s.addHistoryItem);
     const navigation = useNavigation<NavigationProp>();
+    const isProcessingRef = useRef(false);
 
     const handleScrollEnd = (event: any) => {
+        if (isProcessingRef.current) {
+            return;
+        }
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
         const scrollPosition = contentOffset.x;
         const maxScroll = contentSize.width - layoutMeasurement.width;
@@ -44,7 +48,8 @@ const Target = ({item, index}: TargetProps) => {
             Vibration.vibrate(10);
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
             setEphirState(0);
-
+            isProcessingRef.current = true;
+            
             incrementRewards(10, item.ball);
             addHistoryItem({
                 name: item.name,
@@ -52,6 +57,10 @@ const Target = ({item, index}: TargetProps) => {
                 price: item.ball,
                 type: 'target'
             });
+
+            setTimeout(() => {
+                isProcessingRef.current = false;
+            }, 500);
         } else {
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
         }

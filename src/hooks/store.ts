@@ -86,9 +86,14 @@ export const useAppStore = create<AppState>((set, get) => ({
         const currentData = get().userData;
         if (!currentData) return;
 
+        const newHistory = [item, ...currentData.history];
+        if (newHistory.length > 20) {
+            newHistory.pop();
+        }
+
         const newData = {
             ...currentData,
-            history: [...currentData.history, item]
+            history: newHistory
         };
         set({ userData: newData });
         await AsyncStorage.setItem("userData", JSON.stringify(newData));

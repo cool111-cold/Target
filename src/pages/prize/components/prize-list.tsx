@@ -26,7 +26,8 @@ const Prize = ({item, balance, index}: PrizeProps) => {
 
     const scrollViewRef = useRef<ScrollView>(null);
     const navigation = useNavigation<NavigationProp>();
-    
+    const isProcessingRef = useRef(false);
+
     const [isModal, setIsModal] = useState(false);
     const shakeAnimation = useRef(new Animated.Value(0)).current;
 
@@ -34,6 +35,10 @@ const Prize = ({item, balance, index}: PrizeProps) => {
     const addHistoryItem = useAppStore((s) => s.addHistoryItem);
 
     const handleScrollEnd = (event: any) => {
+        if (isProcessingRef.current) {
+            return;
+        }
+
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
         const scrollPosition = contentOffset.x;
         const maxScroll = contentSize.width - layoutMeasurement.width;
@@ -42,14 +47,19 @@ const Prize = ({item, balance, index}: PrizeProps) => {
             console.log('Скролл достиг конца!');
             Vibration.vibrate(10);
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
-
-            incrementRewards(0, item.ball * -1);
-            addHistoryItem({
-                name: item.name,
-                date: new Date().toLocaleDateString("ru-RU").toString(),
-                price: item.ball,
-                type: 'prize'
-            });
+            if (item.ball <= ( balance ?? 0)) {
+                isProcessingRef.current = true;
+                incrementRewards(0, item.ball * -1);
+                addHistoryItem({
+                    name: item.name,
+                    date: new Date().toLocaleDateString("ru-RU").toString(),
+                    price: item.ball,
+                    type: 'prize'
+                });
+                setTimeout(() => {
+                    isProcessingRef.current = false;
+                }, 500);
+            }
         } else {
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
         }
