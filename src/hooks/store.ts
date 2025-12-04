@@ -36,6 +36,8 @@ interface AppState {
     addHistoryItem: (item: historyItem) => Promise<void>;
     incrementRewards: (xp: number, ball: number) => Promise<void>;
     addTarget: (target: targetData) => Promise<void>;
+    updateTarget: (index: number, target: targetData) => Promise<void>;
+    removeTarget: (index: number) => Promise<void>;
     removeHistoryItem: (index: number) => Promise<void>;
   }
   
@@ -114,6 +116,35 @@ export const useAppStore = create<AppState>((set, get) => ({
         const newData = {
             ...currentData,
             targets: [...(currentData.targets ?? []), target]
+        };
+        set({ userData: newData });
+        await AsyncStorage.setItem("userData", JSON.stringify(newData));
+    },
+
+    updateTarget: async (index: number, target: targetData) => {
+        const currentData = get().userData;
+        if (!currentData || !currentData.targets) return;
+
+        const newTargets = [...currentData.targets];
+        newTargets[index] = target;
+
+        const newData = {
+            ...currentData,
+            targets: newTargets
+        };
+        set({ userData: newData });
+        await AsyncStorage.setItem("userData", JSON.stringify(newData));
+    },
+
+    removeTarget: async (index: number) => {
+        const currentData = get().userData;
+        if (!currentData || !currentData.targets) return;
+
+        const newTargets = currentData.targets.filter((_, i) => i !== index);
+
+        const newData = {
+            ...currentData,
+            targets: newTargets
         };
         set({ userData: newData });
         await AsyncStorage.setItem("userData", JSON.stringify(newData));

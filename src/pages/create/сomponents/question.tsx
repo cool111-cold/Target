@@ -29,6 +29,8 @@ interface QuestionProps {
     prevLabel: () => void;
     onValueChange: (questionId: number, value: any) => void;
     currentValue?: any;
+    isEditMode?: boolean;
+    onDelete?: () => void;
 }
 
 // const Button = ({title, id, nextLabel, isLast}: buttonProps) => {
@@ -39,7 +41,7 @@ interface QuestionProps {
 //     )
 // }
 
-export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, currentValue}: QuestionProps) => {
+export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, currentValue, isEditMode, onDelete}: QuestionProps) => {
     const handleValueChange = (value: any) => {
         onValueChange(item.id, value);
     };
@@ -57,6 +59,9 @@ export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, cur
                 <TouchableOpacity style={styles.backButton} onPress={prevLabel}>
                     <Text>Back</Text>
                 </TouchableOpacity>
+                {isEditMode && <TouchableOpacity style={styles.delButton} onPress={onDelete}>
+                    <Text style={{color: ProjectColors.orange}}>Delete</Text>
+                </TouchableOpacity>}
                 <TouchableOpacity style={[styles.createButton, {backgroundColor: ProjectColors.black}]} onPress={nextLabel} disabled={!currentValue}>
                     <Text style={styles.createButtonText}>{isLast ? 'Finish' : 'Next'}</Text>
                 </TouchableOpacity>
@@ -121,9 +126,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     backButton: {
-        width: 100,
+        width: 80,
         height: 45,
         borderColor: ProjectColors.black,
+        borderWidth: 2,
+        borderRadius: 5,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    delButton: {
+        width: 80,
+        height: 45,
+        borderColor: ProjectColors.orange,
         borderWidth: 2,
         borderRadius: 5,
         display: 'flex',

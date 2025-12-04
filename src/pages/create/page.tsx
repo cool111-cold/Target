@@ -1,15 +1,20 @@
 import { Button, StyleSheet, Text, View } from "react-native"
 import { ProgressBar } from "./сomponents/progress-bar";
 import { Question } from "./сomponents/question";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TargenCreateTypeButton } from "../target/components/create-type-button";
 import { TargetCreateNameInput } from "../target/components/create-name-input";
 import { TargetBallPicker } from "../target/components/create-ball";
 import { useAppStore } from "../../hooks/store";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NavigationProp } from "../main/components/links-block";
 
-// Вместо готового компонента передаём функцию, которая принимает onValueChange
+type RootStackParamList = {
+    Create: { targetIndex?: number; targetData?: any } | undefined;
+};
+
+type CreatePageRouteProp = RouteProp<RootStackParamList, 'Create'>;
+
 const TestData = [
     {
         title: 'Type',
@@ -32,27 +37,40 @@ const TestData = [
 ]
 
 export const CreatePage = () => {
+    const route = useRoute<CreatePageRouteProp>();
     const [currentLabel, setCurrentLabel] = useState(0);
-    // Сохраняем ответы: { questionId: number, value: any }[]
     const [answers, setAnswers] = useState<Array<{ questionId: number, value: any }>>([]);
 
+    const targetIndex = route.params?.targetIndex;
+    const targetData = route.params?.targetData;
+    const isEditMode = targetIndex !== undefined && targetData !== undefined;
+
+    useEffect(() => {
+        if (isEditMode && targetData) {
+            setAnswers([
+                { questionId: 0, value: targetData.type },
+                { questionId: 1, value: targetData.name },
+                { questionId: 2, value: targetData.ball },
+            ]);
+        }
+    }, []);
+
     const handleSelectAnswer = (questionId: number, value: any) => {
-        // Обновляем или добавляем ответ для данного вопроса
         setAnswers(prev => {
             const existingIndex = prev.findIndex(a => a.questionId === questionId);
             if (existingIndex >= 0) {
-                // Если ответ уже есть, обновляем его
                 const updated = [...prev];
                 updated[existingIndex] = { questionId, value };
                 return updated;
             } else {
-                // Добавляем новый ответ
                 return [...prev, { questionId, value }];
             }
         });
     };
 
     const addTarget = useAppStore((s) => s.addTarget);
+    const updateTarget = useAppStore((s) => s.updateTarget);
+    const removeTarget = useAppStore((s) => s.removeTarget);
 
     const navigation = useNavigation<NavigationProp>();
 
@@ -64,18 +82,32 @@ export const CreatePage = () => {
             answers.forEach(answer => {
                 console.log(`Вопрос ${answer.questionId}: выбран вариант ${answer.value}`);
             });
-            addTarget({
+
+            const targetPayload = {
                 name: answers[1].value,
                 data: new Date().toLocaleDateString("ru-RU").toString(),
                 ball: answers[2].value,
                 type: answers[0].value,
-                color: 0,
-                ephir: 0
-            });
+                color: targetData?.color || 0,
+                ephir: targetData?.ephir || 0
+            };
+
+            if (isEditMode) {
+                updateTarget(targetIndex, targetPayload);
+            } else {
+                addTarget(targetPayload);
+            }
 
             navigation.replace('Target')
         } else {
             setCurrentLabel((e) => e + 1);
+        }
+    };
+
+    const handleDelete = () => {
+        if (isEditMode && targetIndex !== undefined) {
+            removeTarget(targetIndex);
+            navigation.replace('Target');
         }
     };
 
@@ -89,7 +121,8 @@ export const CreatePage = () => {
         prevLabel={() => setCurrentLabel((e) => e-=1)}
         onValueChange={handleSelectAnswer}
         currentValue={answers.find(a => a.questionId === TestData[currentLabel].id)?.value}
-        
+        isEditMode={isEditMode}
+        onDelete={handleDelete}
     />
     </View>
     )

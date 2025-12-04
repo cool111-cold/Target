@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { EphirIcon, SaveIcon } from "../../../../assets/icons";
 import { Modal } from "../../../feauters/modal";
 import { useAppStore } from "../../../hooks/store";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "../../main/components/links-block";
 
 const { width } = Dimensions.get('window');
 
@@ -18,11 +20,12 @@ interface Data {
 
 interface TargetProps {
     item: Data;
+    index: number;
 }
 
 const colors = ['#885053', '#d5583c', '#787da7', '#393939', '#9ca2dc', '#9ec687', '#358ca3', '#ccc73b', '#1a2f3a']
 
-const Target = ({item}: TargetProps) => {
+const Target = ({item, index}: TargetProps) => {
 
     const scrollViewRef = useRef<ScrollView>(null);
     const [ephirState, setEphirState] = useState(item.ephir);
@@ -30,6 +33,7 @@ const Target = ({item}: TargetProps) => {
     const shakeAnimation = useRef(new Animated.Value(0)).current;
     const incrementRewards = useAppStore((s) => s.incrementRewards);
     const addHistoryItem = useAppStore((s) => s.addHistoryItem);
+    const navigation = useNavigation<NavigationProp>();
 
     const handleScrollEnd = (event: any) => {
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
@@ -158,7 +162,17 @@ const Target = ({item}: TargetProps) => {
                 </View>
             </Animated.View>
 
-            <Modal title="Change" message="Do you want change target?" buttonTitle="Yes, change" visible={isModal} onClose={() => setIsModal(false)}/>
+            <Modal
+                title="Change"
+                message="Do you want change target?"
+                buttonTitle="Yes, change"
+                visible={isModal}
+                onClose={() => setIsModal(false)}
+                onConfirm={() => {
+                    setIsModal(false);
+                    navigation.navigate('Create', { targetIndex: index, targetData: item });
+                }}
+            />
         </ScrollView>
 
     )
@@ -172,7 +186,7 @@ export const TargetList = ({Data}: TargetListProps) => {
     return (
         <View style={styles.container}>
             {Data.map((item, index) => (
-                <Target key={index} item={item as any}/>
+                <Target key={index} item={item as any} index={index}/>
             ))}
         </View>
     )

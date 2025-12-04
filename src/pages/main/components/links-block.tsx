@@ -8,7 +8,7 @@ type RootStackParamList = {
     Home: undefined;
     Target: undefined;
     Prize: undefined;
-    Create: undefined;
+    Create: { targetIndex?: number; targetData?: any } | undefined;
 };
 
 
