@@ -170,7 +170,7 @@ const Target = ({item, index}: TargetProps) => {
                 onClose={() => setIsModal(false)}
                 onConfirm={() => {
                     setIsModal(false);
-                    navigation.navigate('Create', { targetIndex: index, targetData: item });
+                    navigation.navigate('Create', { targetIndex: index, targetData: item, type: 'target' });
                 }}
             />
         </ScrollView>

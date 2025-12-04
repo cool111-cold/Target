@@ -10,7 +10,7 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NavigationProp } from "../main/components/links-block";
 
 type RootStackParamList = {
-    Create: { targetIndex?: number; targetData?: any } | undefined;
+    Create: { targetIndex?: number; targetData?: any, type?: 'target' | 'prize' } | undefined;
 };
 
 type CreatePageRouteProp = RouteProp<RootStackParamList, 'Create'>;
@@ -43,6 +43,7 @@ export const CreatePage = () => {
 
     const targetIndex = route.params?.targetIndex;
     const targetData = route.params?.targetData;
+    const type = route.params?.type;
     const isEditMode = targetIndex !== undefined && targetData !== undefined;
 
     useEffect(() => {
@@ -72,6 +73,10 @@ export const CreatePage = () => {
     const updateTarget = useAppStore((s) => s.updateTarget);
     const removeTarget = useAppStore((s) => s.removeTarget);
 
+    const addPrize = useAppStore((s) => s.addPrize);
+    const updatePrize = useAppStore((s) => s.updatePrize);
+    const removePrize = useAppStore((s) => s.removePrize);
+
     const navigation = useNavigation<NavigationProp>();
 
     const handleNext = () => {
@@ -93,12 +98,23 @@ export const CreatePage = () => {
             };
 
             if (isEditMode) {
-                updateTarget(targetIndex, targetPayload);
+                type === 'target' ? 
+                updateTarget(targetIndex, targetPayload) 
+                :
+                updatePrize(targetIndex, targetPayload)
+                
             } else {
-                addTarget(targetPayload);
+                type === 'target' ? 
+                addTarget(targetPayload) 
+                :
+                addPrize(targetPayload)
             }
 
+            type === 'target' ? 
             navigation.replace('Target')
+            :
+            navigation.replace('Prize')
+
         } else {
             setCurrentLabel((e) => e + 1);
         }
@@ -106,8 +122,13 @@ export const CreatePage = () => {
 
     const handleDelete = () => {
         if (isEditMode && targetIndex !== undefined) {
-            removeTarget(targetIndex);
-            navigation.replace('Target');
+            type === 'target' ?
+            removeTarget(targetIndex) :
+            removePrize(targetIndex)
+
+            type === 'target' ?
+            navigation.replace('Target') :
+            navigation.replace('Prize')
         }
     };
 

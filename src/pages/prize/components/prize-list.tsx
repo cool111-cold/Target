@@ -2,6 +2,9 @@ import { Animated, Dimensions, Pressable, ScrollView, StyleSheet, Text, Touchabl
 import { ProjectColors } from "../../../../assets/colors";
 import { useRef, useState } from "react";
 import { Modal } from "../../../feauters/modal";
+import { useAppStore } from "../../../hooks/store";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "../../main/components/links-block";
 
 const { width } = Dimensions.get('window');
 
@@ -14,15 +17,21 @@ interface Data {
 
 interface PrizeProps {
     item: Data;
+    balance?: number | null | undefined;
+    index: number;
 }
 
 
-const Prize = ({item}: PrizeProps) => {
+const Prize = ({item, balance, index}: PrizeProps) => {
 
     const scrollViewRef = useRef<ScrollView>(null);
+    const navigation = useNavigation<NavigationProp>();
     
     const [isModal, setIsModal] = useState(false);
     const shakeAnimation = useRef(new Animated.Value(0)).current;
+
+    const incrementRewards = useAppStore((s) => s.incrementRewards);
+    const addHistoryItem = useAppStore((s) => s.addHistoryItem);
 
     const handleScrollEnd = (event: any) => {
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
@@ -33,6 +42,14 @@ const Prize = ({item}: PrizeProps) => {
             console.log('Скролл достиг конца!');
             Vibration.vibrate(10);
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
+
+            incrementRewards(0, item.ball * -1);
+            addHistoryItem({
+                name: item.name,
+                date: new Date().toLocaleDateString("ru-RU").toString(),
+                price: item.ball,
+                type: 'prize'
+            });
         } else {
             scrollViewRef.current?.scrollTo({ x: 0, animated: true });
         }
@@ -42,8 +59,8 @@ const Prize = ({item}: PrizeProps) => {
         Vibration.vibrate(10);
         setIsModal(true);
     }
-    const BALANCE = 32;
-    const blanceLine = (BALANCE / item.ball) * 100
+
+    const blanceLine = (balance ?? 0 / item.ball) * 100
 
     return (
         <ScrollView
@@ -68,7 +85,17 @@ const Prize = ({item}: PrizeProps) => {
                 </View>
             </Animated.View>
 
-            <Modal title="Change" message="Do you want change target?" buttonTitle="Yes, change" visible={isModal} onClose={() => setIsModal(false)}/>
+            <Modal
+                title="Change"
+                message="Do you want change prize?"
+                buttonTitle="Yes, change"
+                visible={isModal}
+                onClose={() => setIsModal(false)}
+                onConfirm={() => {
+                    setIsModal(false);
+                    navigation.navigate('Create', { targetIndex: index, targetData: item, type: 'prize' });
+                }}
+            />
         </ScrollView>
 
     )
@@ -79,10 +106,11 @@ interface TargetListProps {
 }
 
 export const PrizeList = ({Data}: TargetListProps) => {
+    const balance = useAppStore((s) => s.userData?.ball);
     return (
         <View style={styles.container}>
             {Data.map((item, index) => (
-                <Prize key={index} item={item}/>
+                <Prize key={index} item={item} balance={balance} index={index}/>
             ))}
         </View>
     )

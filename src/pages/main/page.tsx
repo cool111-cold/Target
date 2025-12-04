@@ -11,6 +11,7 @@ const { width } = Dimensions.get('window');
 
 export const MainPage = () => {
     const loadUserData = useAppStore((s) => s.loadUserData);
+    const userData = useAppStore((s) => s.userData);
 
     useEffect(() => {
       loadUserData()

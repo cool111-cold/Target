@@ -5,42 +5,27 @@ import { useState } from "react";
 import { Balance } from "./components/balance";
 import { PrizeList } from "./components/prize-list";
 import { AddButton } from "../../components/add-button";
-
-const TestData: Array<{
-    name: string;
-    ball: number;
-    type: 'Daily' | 'Disposable';
-    color: number;
-}> = [
-  {
-      name: 'Чипсы',
-      ball: 50,
-      type: 'Daily',
-      color: 0
-  },
-  {
-      name: 'Игра',
-      ball: 200,
-      type: 'Disposable',
-      color: 5
-  },
-]
+import { useAppStore } from "../../hooks/store";
 
 export const PrizePage = () => {
     const [activeFilter, setActiveFilter] = useState('All');
-    
+
+    const userData = useAppStore((s) => s.userData);
+    const prizeData = userData?.prizes
+
     const filteredData = activeFilter === 'All'
-        ? TestData
-        : TestData.filter(item => item.type === activeFilter);
+        ? prizeData
+        : prizeData?.filter(item => item.type === activeFilter);
+
     return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <CalendarBlock />
         <ChoiceBar active={activeFilter} setActive={setActiveFilter} />
         <Balance />
-        <PrizeList Data={filteredData}/>
+        {filteredData && filteredData.length > 0 && <PrizeList Data={filteredData}/>}
       </ScrollView>
-      <AddButton />
+      <AddButton type='prize' />
     </View>
     )
 }

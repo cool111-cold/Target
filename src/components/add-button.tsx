@@ -4,12 +4,16 @@ import { PlusIcon } from "../../assets/icons/plus"
 import { useNavigation } from "@react-navigation/native";
 import { NavigationProp } from "../pages/main/components/links-block";
 
-export const AddButton = () => {
+interface Props {
+    type: 'target' | 'prize'
+}
+
+export const AddButton = ({type}: Props) => {
 
     const navigation = useNavigation<NavigationProp>();
 
     const handleNavigate = () => {
-        return navigation.navigate('Create');
+        return navigation.navigate('Create', {type: type});
     }
     
     return (

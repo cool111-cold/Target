@@ -8,7 +8,7 @@ type RootStackParamList = {
     Home: undefined;
     Target: undefined;
     Prize: undefined;
-    Create: { targetIndex?: number; targetData?: any } | undefined;
+    Create: { targetIndex?: number; targetData?: any, type: 'target' | 'prize' } | undefined;
 };
 
 
@@ -40,7 +40,7 @@ export const LinksBlock = () => {
     return (
         <View style={styles.contsiner}>
             <BLock type='target' points={userData?.targets?.length}/>
-            <BLock type='prize' />
+            <BLock type='prize' points={userData?.prizes?.length}/>
         </View>
     )
 }

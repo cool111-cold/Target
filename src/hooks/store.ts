@@ -17,6 +17,13 @@ interface targetData {
     color: number;
 }
 
+interface prizeData {
+    name: string;
+    ball: number;
+    type: 'Daily' | 'Disposable';
+    color: number;
+}
+
 export interface UserData {
     xp: number;
     ball: number;
@@ -24,6 +31,7 @@ export interface UserData {
     history: historyItem[];
     ephir: number;
     targets: targetData[] | undefined;
+    prizes: prizeData[] | undefined;
   }
 
 interface AppState {
@@ -39,6 +47,9 @@ interface AppState {
     updateTarget: (index: number, target: targetData) => Promise<void>;
     removeTarget: (index: number) => Promise<void>;
     removeHistoryItem: (index: number) => Promise<void>;
+    addPrize: (prize: prizeData) => Promise<void>;
+    updatePrize: (index: number, prize: prizeData) => Promise<void>;
+    removePrize: (index: number) => Promise<void>;
   }
   
   
@@ -171,8 +182,63 @@ export const useAppStore = create<AppState>((set, get) => ({
             history: newHistory,
             xp: isTarget ? Math.max(0, currentData.xp - 10) : currentData.xp,
             ball: isTarget
-                ? Math.max(0, currentData.ball - priceValue)
+                ? currentData.ball - priceValue
                 : currentData.ball + priceValue
+        };
+        set({ userData: newData });
+        await AsyncStorage.setItem("userData", JSON.stringify(newData));
+    },
+
+    addPrize: async (prize: prizeData) => {
+        const currentData = get().userData;
+        if (!currentData) {
+            console.warn('addPrize: userData is null, initializing default data');
+            const defaultData: UserData = {
+                xp: 0,
+                ball: 0,
+                data: new Date().toLocaleDateString("ru-RU"),
+                history: [],
+                ephir: 0,
+                targets: undefined,
+                prizes: [prize]
+            };
+            set({ userData: defaultData });
+            await AsyncStorage.setItem("userData", JSON.stringify(defaultData));
+            return;
+        }
+
+        const newData = {
+            ...currentData,
+            prizes: [...(currentData.prizes ?? []), prize]
+        };
+        set({ userData: newData });
+        await AsyncStorage.setItem("userData", JSON.stringify(newData));
+    },
+
+    updatePrize: async (index: number, prize: prizeData) => {
+        const currentData = get().userData;
+        if (!currentData || !currentData.prizes) return;
+
+        const newPrizes = [...currentData.prizes];
+        newPrizes[index] = prize;
+
+        const newData = {
+            ...currentData,
+            prizes: newPrizes
+        };
+        set({ userData: newData });
+        await AsyncStorage.setItem("userData", JSON.stringify(newData));
+    },
+
+    removePrize: async (index: number) => {
+        const currentData = get().userData;
+        if (!currentData || !currentData.prizes) return;
+
+        const newPrizes = currentData.prizes.filter((_, i) => i !== index);
+
+        const newData = {
+            ...currentData,
+            prizes: newPrizes
         };
         set({ userData: newData });
         await AsyncStorage.setItem("userData", JSON.stringify(newData));
