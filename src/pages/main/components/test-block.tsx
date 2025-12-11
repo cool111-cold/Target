@@ -5,6 +5,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } fr
 import { ProjectColors } from "../../../../assets/colors";
 import { NavigationProp } from "./links-block";
 import { useNavigation } from "@react-navigation/native";
+import { useAppStore } from "../../../hooks/store";
 
 const { width } = Dimensions.get('window');
 const COLORS = ['#ff6fd8', '#2575fc', '#6a11cb'];
@@ -17,6 +18,7 @@ const isTimeToTest = hours >= 21 || hours <= 2;
 export const TestBlock = () => {
     const progress = useSharedValue(0);
     const navigation = useNavigation<NavigationProp>();
+    const userData = useAppStore((s) => s.userData);
     
       useEffect(() => {
         progress.value = withRepeat(
@@ -34,7 +36,11 @@ export const TestBlock = () => {
         navigation.navigate('Test')
       }
 
-      if (!isTimeToTest) {
+      // Проверяем был ли тест пройден сегодня
+      const today = new Date().toLocaleDateString("ru-RU");
+      const testCompletedToday = userData?.lastTestDate === today;
+
+      if (!isTimeToTest || testCompletedToday) {
         return null
       }
     

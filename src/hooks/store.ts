@@ -32,6 +32,7 @@ export interface UserData {
     ephir: number;
     targets: targetData[] | undefined;
     prizes: prizeData[] | undefined;
+    lastTestDate?: string;
   }
 
 interface AppState {
@@ -122,7 +123,8 @@ export const useAppStore = create<AppState>((set, get) => ({
                 data: new Date().toLocaleDateString("ru-RU"),
                 history: [],
                 ephir: 0,
-                targets: [target]
+                targets: [target],
+                prizes: undefined
             };
             set({ userData: defaultData });
             await AsyncStorage.setItem("userData", JSON.stringify(defaultData));

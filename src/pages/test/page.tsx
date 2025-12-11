@@ -190,6 +190,7 @@ export const TestPage = () => {
     const userData = useAppStore((s) => s.userData);
     const addHistoryItem = useAppStore((s) => s.addHistoryItem);
     const incrementRewards = useAppStore((s) => s.incrementRewards);
+    const updateUserData = useAppStore((s) => s.updateUserData);
     const data = userData?.targets?.filter((e) => e.type === 'Daily');
 
     const [finalBall, setFinalBall] = useState(0);
@@ -227,6 +228,11 @@ export const TestPage = () => {
                 price: task.ball
             });
         }
+
+        // Сохраняем дату прохождения теста
+        await updateUserData({
+            lastTestDate: new Date().toLocaleDateString("ru-RU")
+        });
 
         // @ts-ignore
         navigation.navigate('Home');
