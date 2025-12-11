@@ -3,6 +3,8 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import LinearGradient from "react-native-linear-gradient";
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { ProjectColors } from "../../../../assets/colors";
+import { NavigationProp } from "./links-block";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get('window');
 const COLORS = ['#ff6fd8', '#2575fc', '#6a11cb'];
@@ -14,6 +16,7 @@ const isTimeToTest = hours >= 21 || hours <= 2;
 
 export const TestBlock = () => {
     const progress = useSharedValue(0);
+    const navigation = useNavigation<NavigationProp>();
     
       useEffect(() => {
         progress.value = withRepeat(
@@ -27,12 +30,16 @@ export const TestBlock = () => {
         transform: [{ translateX: -width + progress.value * width }],
       }));
 
+      const handlePress = () => {
+        navigation.navigate('Test')
+      }
+
       if (!isTimeToTest) {
         return null
       }
     
       return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handlePress}>
             <View style={styles.balanceBlockGradientWrapper}>
             <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
                 <LinearGradient

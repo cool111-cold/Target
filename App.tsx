@@ -7,13 +7,14 @@ import { Layout } from './src/components/layout';
 import { CuponPage } from './src/pages/cupon/page';
 import { PrizePage } from './src/pages/prize/page';
 import { CreatePage } from './src/pages/create/page';
+import { TestPage } from './src/pages/test/page';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [hideTabBar, setHideTabBar] = React.useState(false);
   const navigationRef = React.useRef(null);
-  const hideBarPages = ['Create']
+  const hideBarPages = ['Create', 'Test']
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -33,6 +34,7 @@ export default function App() {
           <Stack.Screen name="Cupons" component={CuponPage} />
           <Stack.Screen name="Prize" component={PrizePage} />
           <Stack.Screen name="Create" component={CreatePage} />
+          <Stack.Screen name="Test" component={TestPage} />
         </Stack.Navigator>
       </Layout>
     </NavigationContainer>

@@ -5,12 +5,18 @@ interface ButtonProps {
     title: string,
     containerStyle?: any,
     onClick: () => void,
+    disabled?: boolean;
 }
 
-export const Button = ({title, containerStyle, onClick}: ButtonProps) => {
+export const Button = ({title, containerStyle, onClick, disabled}: ButtonProps) => {
+    const handlePress = () => {
+        if (!disabled) {
+            onClick();
+        }
+    }
     return (
-        <TouchableOpacity onPress={onClick}>
-            <View style={[styles.container, containerStyle]}>
+        <TouchableOpacity onPress={handlePress}>
+            <View style={[styles.container, containerStyle, {backgroundColor: disabled ? ProjectColors.lightGrey : ProjectColors.black}]}>
                 <Text style={styles.text}>{title}</Text>
             </View>
         </TouchableOpacity>
@@ -22,7 +28,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 12,
-        backgroundColor: ProjectColors.black,
         borderRadius: 5
         
     },

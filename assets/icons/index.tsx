@@ -10,3 +10,4 @@ export * from './info';
 export * from './ephir';
 export * from './pen';
 export * from './save';
+export * from './face-smile';

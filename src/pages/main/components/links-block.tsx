@@ -9,6 +9,7 @@ type RootStackParamList = {
     Target: undefined;
     Prize: undefined;
     Create: { targetIndex?: number; targetData?: any, type: 'target' | 'prize' } | undefined;
+    Test: undefined;
 };
 
 
