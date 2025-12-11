@@ -42,6 +42,8 @@ export const Gift = ({ onTake, prize }: GiftProps) => {
     setModalVisible(false);
   }
 
+  const isCupon = prize.value === 'def cupon';
+
   return (
     <>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -49,7 +51,7 @@ export const Gift = ({ onTake, prize }: GiftProps) => {
           <CloseGift color='#DFDEDA'/>
         </Animated.View>
       </TouchableOpacity>
-      <Modal title={'Great! you got'} message={`${prize.value} x${prize.coll}`} buttonTitle={'Get'} visible={modalVisible} onClose={handleTakeGift}/>
+      <Modal title={'Great! you got'} message={`${prize.value} x${isCupon ? '1' : prize.coll}`} buttonTitle={'Get'} visible={modalVisible} onClose={handleTakeGift}/>
     </>
   )
 }

@@ -33,6 +33,7 @@ const Prize = ({item, balance, index}: PrizeProps) => {
 
     const incrementRewards = useAppStore((s) => s.incrementRewards);
     const addHistoryItem = useAppStore((s) => s.addHistoryItem);
+    const removePrize = useAppStore((s) => s.removePrize);
 
     const handleScrollEnd = (event: any) => {
         if (isProcessingRef.current) {
@@ -56,6 +57,11 @@ const Prize = ({item, balance, index}: PrizeProps) => {
                     price: item.ball,
                     type: 'prize'
                 });
+
+                if (item.type === 'Disposable') {
+                    removePrize(index)
+                }
+
                 setTimeout(() => {
                     isProcessingRef.current = false;
                 }, 500);

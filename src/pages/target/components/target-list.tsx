@@ -33,8 +33,19 @@ const Target = ({item, index}: TargetProps) => {
     const shakeAnimation = useRef(new Animated.Value(0)).current;
     const incrementRewards = useAppStore((s) => s.incrementRewards);
     const addHistoryItem = useAppStore((s) => s.addHistoryItem);
+    const userData = useAppStore((s) => s.userData);
+    const setUserData = useAppStore((s) => s.setUserData);
+    const updateTarget = useAppStore((s) => s.updateTarget);
+    const removeTarget = useAppStore((s) => s.removeTarget);
     const navigation = useNavigation<NavigationProp>();
     const isProcessingRef = useRef(false);
+
+    const getFinalPrice = (ephir: number, ball: number) => {
+        if (ephir === 100) return Math.floor(ball + (ball / 2))
+        if (ball > 4 && ephir >= 50) return ball + 1
+        
+        return ball
+    }
 
     const handleScrollEnd = (event: any) => {
         if (isProcessingRef.current) {
@@ -50,13 +61,21 @@ const Target = ({item, index}: TargetProps) => {
             setEphirState(0);
             isProcessingRef.current = true;
             
-            incrementRewards(10, item.ball);
+            incrementRewards(10, getFinalPrice(item.ephir, item.ball));
             addHistoryItem({
                 name: item.name,
                 date: new Date().toLocaleDateString("ru-RU").toString(),
-                price: item.ball,
+                price: getFinalPrice(item.ephir, item.ball),
                 type: 'target'
             });
+            updateTarget(index, {
+                ...item,
+                ephir: 0
+            });
+
+            if (item.type == 'Disposable') {
+                removeTarget(index);
+            }
 
             setTimeout(() => {
                 isProcessingRef.current = false;
@@ -119,13 +138,23 @@ const Target = ({item, index}: TargetProps) => {
     }, [ephirState]);
 
     const handlePressEphir = () => {
-        if (ephirState < 90) {
-            Vibration.vibrate(10);
-        }else{
-            Vibration.vibrate(100);
-        }
+        if (userData && userData.ephir >= 10) {
+            if (ephirState < 90) {
+                Vibration.vibrate(10);
+            }else{
+                Vibration.vibrate(100);
+            }
 
-        setEphirState((e) => e+=10)
+            const newEphirState = ephirState + 10;
+
+            setUserData({...userData, ephir: userData.ephir - 10})
+            setEphirState(newEphirState)
+
+            updateTarget(index, {
+                ...item,
+                ephir: newEphirState
+            });
+        }
     }
 
     const handleLongPress = () => {
@@ -159,7 +188,7 @@ const Target = ({item, index}: TargetProps) => {
             }]}>
                 <Pressable style={[styles.targetContainer, {borderColor: ephirState > 90 ? ProjectColors.purple : ProjectColors.white, backgroundColor: ProjectColors.black}]} onLongPress={handleLongPress}>
                     <Text style={styles.textValue}>{item.name}</Text>
-                    <Text style={styles.ephirText}>{item.ball}</Text>
+                    <Text style={[styles.ephirText, {color: getFinalPrice(item.ephir, item.ball) !== item.ball ? ProjectColors.purple : ProjectColors.white}]}>{getFinalPrice(item.ephir, item.ball)}</Text>
                     
                     <EphirButton />
 
@@ -247,7 +276,7 @@ const styles = StyleSheet.create({
         fontFamily: 'StackSansTextVariableFont',
         fontWeight: '700',
         fontSize: 50,
-        color: ProjectColors.white,
+        // color: ProjectColors.white,
         marginTop: -12
     },
     text: {

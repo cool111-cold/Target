@@ -3,7 +3,7 @@ import { ProjectColors } from "../../../assets/colors"
 
 interface ButtonProps {
     title: string,
-    containerStyle: any,
+    containerStyle?: any,
     onClick: () => void,
 }
 

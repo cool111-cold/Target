@@ -11,6 +11,11 @@ interface BalanceProps {
   isClick: boolean;
   setIsClick: (e: any) => void;
 }
+
+interface GiftProps {
+  value: string;
+  coll: number;
+}
  
 export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
 
@@ -25,14 +30,19 @@ export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
     }).start();
   }, [isClick]);
 
-  const takeGift = () => {
+  const userData = useAppStore((s) => s.userData);
+  const setUserData = useAppStore((s) => s.setUserData);
+
+  const takeGift = (item: GiftProps) => {
     setHasGift(false);
     setIsClick(false);
+    if (userData) {
+      setUserData({...userData, [item.value]: userData[item.value] += item.coll})
+    }
   }
 
   const prizes = useRandomGift();
   
-  const userData = useAppStore((s) => s.userData);
   const currentDay = daysBetween(userData?.data ?? new Date().toLocaleDateString("ru-RU").toString())
 
   return (
@@ -56,9 +66,9 @@ export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
           { transform: [{ translateY: slideAnim }], height: isClick ? 75 : 0, marginBottom: isClick ? 12 : 0}
         ]}
       > 
-      <Gift onTake={takeGift} prize={prizes[0]}/>
-      <Gift onTake={takeGift} prize={prizes[1]}/>
-      <Gift onTake={takeGift} prize={prizes[2]}/>
+      <Gift onTake={() => takeGift(prizes[0])} prize={prizes[0]}/>
+      <Gift onTake={() => takeGift(prizes[1])} prize={prizes[1]}/>
+      <Gift onTake={() => takeGift(prizes[2])} prize={prizes[2]}/>
       </Animateds.View>
     </View>
   );
