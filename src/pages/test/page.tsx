@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react"
 import { useAppStore } from "../../hooks/store"
 import { FaceSmile } from "../../../assets/icons"
 import { Button } from "../../feauters/button"
+import { useNavigation } from "@react-navigation/native"
 
 interface TestItemProps {
     color: string
@@ -14,8 +15,9 @@ interface TestItemProps {
     setVisible?: (e: number) => void;
     title?: string;
     ball?: string | number;
-    setItem?: () => void;
+    setItem?: (item: targetData | undefined, isCompleted: boolean) => void;
     setCount?: (e: number) => void;
+    itemData?: targetData;
 }
 
 interface targetData {
@@ -27,8 +29,13 @@ interface targetData {
     color: number;
 }
 
-const TestItem = ({color, rotation = 0, translateY = 0, translateX = 0, draggable = false, setVisible, title, ball, setItem, setCount}: TestItemProps) => {
+const TestItem = ({color, rotation = 0, translateY = 0, translateX = 0, draggable = false, setVisible, title, ball, setItem, setCount, itemData}: TestItemProps) => {
     const pan = useRef(new Animated.Value(0)).current
+    const itemDataRef = useRef(itemData);
+
+    useEffect(() => {
+        itemDataRef.current = itemData;
+    }, [itemData]);
 
     const panResponder = useRef(
         PanResponder.create({
@@ -48,19 +55,17 @@ const TestItem = ({color, rotation = 0, translateY = 0, translateX = 0, draggabl
                 const threshold = 100 // Порог для определения края (можно настроить)
 
                 if (gestureState.dx < -threshold) {
-                    console.log(0) // Сдвинут влево
+                    console.log(0)
                     Vibration.vibrate(10);
                     if (setCount) setCount(-1)
-                    if (setItem) setItem();
+                    if (setItem) setItem(itemDataRef.current, false);
                 } else if (gestureState.dx > threshold) {
-                    console.log(1) // Сдвинут вправо
+                    console.log(1)
                     Vibration.vibrate(10);
                     if (setCount) setCount(1)
-                    if (setItem) setItem();
+                    if (setItem) setItem(itemDataRef.current, true);
                 }
 
-                // Возвращаем на исходную позицию с анимацией
-                // if (setItem) setItem();
                 Animated.spring(pan, {
                     toValue: 0,
                     useNativeDriver: false,
@@ -181,17 +186,50 @@ const Face = ({count}: FaceProps) => {
 }
 
 export const TestPage = () => {
+    const navigation = useNavigation();
     const userData = useAppStore((s) => s.userData);
+    const addHistoryItem = useAppStore((s) => s.addHistoryItem);
+    const incrementRewards = useAppStore((s) => s.incrementRewards);
     const data = userData?.targets?.filter((e) => e.type === 'Daily');
 
     const [finalBall, setFinalBall] = useState(0);
     const [visibleText, setVisibleText] = useState(0);
     const [currentItem, setCurrentItem] = useState(0);
     const [finalCount, setFinalCount] = useState(0);
+    const [completedTasks, setCompletedTasks] = useState<targetData[]>([]);
 
-    const handleSetItem = (item: targetData | undefined) => {
+    const handleSetItem = (item: targetData | undefined, isCompleted: boolean) => {
+        console.log('handleSetItem called:', { item, isCompleted });
         setCurrentItem((prev) => prev + 1 < (data?.length || 0) ? prev + 1 : prev);
-        // setFinalBall((prev) => prev += item?.ball ?? 0);
+
+        if (isCompleted && item) {
+            console.log('Adding completed task:', item.name, 'balls:', item.ball);
+            setCompletedTasks((prev) => [...prev, item]);
+            setFinalBall((prev) => prev + item.ball);
+        }
+    }
+
+    const handleGetBalls = async () => {
+        console.log('handleGetBalls called. Completed tasks:', completedTasks);
+        console.log('Final balls:', finalBall);
+
+
+        const totalXP = completedTasks.length * 10;
+        console.log('Incrementing rewards - XP:', totalXP, 'Balls:', finalBall);
+        await incrementRewards(totalXP, finalBall);
+
+        for (const task of completedTasks) {
+            console.log('Adding to history:', task.name, task.ball);
+            await addHistoryItem({
+                name: task.name,
+                date: new Date().toLocaleDateString("ru-RU"),
+                type: 'target',
+                price: task.ball
+            });
+        }
+
+        // @ts-ignore
+        navigation.navigate('Home');
     }
 
     return (
@@ -216,13 +254,14 @@ export const TestPage = () => {
                 setCount={setFinalCount}
                 title={currentItem < (data?.length || 0) ? data?.[currentItem].name : ''}
                 ball={currentItem < (data?.length || 0) ? data?.[currentItem].ball : ''}
-                setItem={() => handleSetItem(data?.[currentItem])}
+                itemData={currentItem < (data?.length || 0) ? data?.[currentItem] : undefined}
+                setItem={handleSetItem}
             />
         </View>
         <Text style={[styles.yesText, {opacity: visibleText}]}>{'YES'}</Text>
         <Text style={[styles.noText, {opacity: visibleText}]}>{'NO'}</Text>
         <View style={{position: 'absolute', bottom: 24, width: '100%'}}>
-        <Button title={`Get ${finalBall} balls`} onClick={() => null} disabled={currentItem + 1 < (data?.length ?? 0)} />
+        <Button title={`Get ${finalBall} balls`} onClick={handleGetBalls} disabled={currentItem + 1 < (data?.length ?? 0)} />
         </View>
     </View>
     )
