@@ -15,6 +15,15 @@ interface GiftProps {
   prize: Prize;
 }
 
+const GiftMap = {
+  'xp': 'xp for you level',
+  'ephir': 'ephir for update your targets',
+  'coin': 'coins to purchase coupons',
+  'ball': 'balls to purchase prizes',
+  'defCupon': 'a regular coupon for a free purchase of any daily prize',
+  'cupon': 'coupon for free purchase of any prize'
+}
+
 export const Gift = ({ onTake, prize }: GiftProps) => {
   const rotation = useSharedValue(0); 
 
@@ -42,7 +51,7 @@ export const Gift = ({ onTake, prize }: GiftProps) => {
     setModalVisible(false);
   }
 
-  const isCupon = prize.value === 'def cupon';
+  const isCupon = prize.value === 'defCupon';
 
   return (
     <>
@@ -51,7 +60,7 @@ export const Gift = ({ onTake, prize }: GiftProps) => {
           <CloseGift color='#DFDEDA'/>
         </Animated.View>
       </TouchableOpacity>
-      <Modal title={'Great! you got'} message={`${prize.value} x${isCupon ? '1' : prize.coll}`} buttonTitle={'Get'} visible={modalVisible} onClose={handleTakeGift}/>
+      <Modal title={'Great! you got'} message={`${isCupon ? '1' : prize.coll} ${GiftMap[prize.value]}`} buttonTitle={'Get'} visible={modalVisible} onClose={handleTakeGift}/>
     </>
   )
 }

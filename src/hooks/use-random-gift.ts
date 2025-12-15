@@ -1,10 +1,10 @@
 const Prize = {
     "1": {
-        value: ['exp', 'ephir', 'coin'],
+        value: ['xp', 'ephir', 'coin'],
         coll: [5, 10, 20, 30]
     },
     "2": {
-        value: ['ball', 'def cupon'],
+        value: ['ball', 'defCupon'],
         coll: [5, 7, 10]
     },
     "3": {
@@ -13,8 +13,11 @@ const Prize = {
     }
 }
 
-export const useRandomGift = () => {
-    const type = 'daily';
+interface useRandomGiftProps {
+    type: 'daily' | 'weekly'
+}
+
+export const useRandomGift = ({type}: useRandomGiftProps) => {
     const rewards = [
         { name: "1", chance: type === 'daily' ? 95 : 79 },
         { name: "2", chance: type === 'daily' ? 5 : 20 },

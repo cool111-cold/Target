@@ -19,9 +19,24 @@ interface GiftProps {
  
 export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
 
-  const [hasGift, setHasGift] = useState(true);
-  
+  const userData = useAppStore((s) => s.userData);
+  const setUserData = useAppStore((s) => s.setUserData);
+
+  const today = new Date();
+  const isSunday = today.getDay() === 0;
+  const giftType = isSunday ? 'weekly' : 'daily';
+
+  const todayString = today.toLocaleDateString("ru-RU");
+  const canReceiveGift = userData?.lastGiftDate !== todayString;
+
+  const [hasGift, setHasGift] = useState(canReceiveGift);
+
   const slideAnim = useRef(new Animateds.Value(hasGift ? 0 : -120)).current;
+
+  useEffect(() => {
+    setHasGift(canReceiveGift);
+  }, [canReceiveGift]);
+
   useEffect(() => {
     Animateds.timing(slideAnim, {
       toValue: isClick ? 0 : -120,  // куда едет
@@ -30,19 +45,20 @@ export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
     }).start();
   }, [isClick]);
 
-  const userData = useAppStore((s) => s.userData);
-  const setUserData = useAppStore((s) => s.setUserData);
-
   const takeGift = (item: GiftProps) => {
     setHasGift(false);
     setIsClick(false);
     if (userData) {
-      setUserData({...userData, [item.value]: userData[item.value] += item.coll})
+      setUserData({
+        ...userData,
+        [item.value]: userData[item.value] += item.coll,
+        lastGiftDate: todayString
+      })
     }
   }
 
-  const prizes = useRandomGift();
-  
+  const prizes = useRandomGift({type: giftType});
+
   const currentDay = daysBetween(userData?.data ?? new Date().toLocaleDateString("ru-RU").toString())
 
   return (

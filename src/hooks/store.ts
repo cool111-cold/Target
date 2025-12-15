@@ -32,7 +32,11 @@ export interface UserData {
     ephir: number;
     targets: targetData[] | undefined;
     prizes: prizeData[] | undefined;
+    coin: number,
+    defCupon: number,
+    cupon: number,
     lastTestDate?: string;
+    lastGiftDate?: string;
   }
 
 interface AppState {
@@ -124,7 +128,10 @@ export const useAppStore = create<AppState>((set, get) => ({
                 history: [],
                 ephir: 0,
                 targets: [target],
-                prizes: undefined
+                prizes: undefined,
+                coin: 0,
+                defCupon: 0,
+                cupon: 0
             };
             set({ userData: defaultData });
             await AsyncStorage.setItem("userData", JSON.stringify(defaultData));
@@ -207,7 +214,10 @@ export const useAppStore = create<AppState>((set, get) => ({
                 history: [],
                 ephir: 0,
                 targets: undefined,
-                prizes: [prize]
+                prizes: [prize],
+                coin: 0,
+                defCupon: 0,
+                cupon: 0
             };
             set({ userData: defaultData });
             await AsyncStorage.setItem("userData", JSON.stringify(defaultData));
