@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { ProjectColors } from "../../../../assets/colors"
-import { HomeIcon, CuponIcon } from "../../../../assets/icons"
+import { HomeIcon, CuponIcon, ProfileIcon } from "../../../../assets/icons"
 import { JSX, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationProp } from "./links-block";
@@ -47,13 +47,13 @@ export const TabBar = () => {
                 setActive={setActive}
                 active={active}
             />
-            {/* <Tab 
-                name="Setting" 
-                iconActive={<CloseGift color={ProjectColors.black} />}
-                icon={<CloseGift color={ProjectColors.white} />}
+            <Tab
+                name="Profile"
+                iconActive={<ProfileIcon color={ProjectColors.black} width={30} height={30}/>}
+                icon={<ProfileIcon color={ProjectColors.white} width={30} height={30}/>}
                 setActive={setActive}
                 active={active}
-            /> */}
+            />
         </View>
     )
 }

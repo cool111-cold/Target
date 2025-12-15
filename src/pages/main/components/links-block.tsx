@@ -4,12 +4,14 @@ import { Target, Pizza } from "../../../../assets/icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppStore } from "../../../hooks/store";
+
 type RootStackParamList = {
     Home: undefined;
     Target: undefined;
     Prize: undefined;
     Create: { targetIndex?: number; targetData?: any, type: 'target' | 'prize' } | undefined;
     Test: undefined;
+    Profile: undefined;
 };
 
 

@@ -8,6 +8,7 @@ import { CuponPage } from './src/pages/cupon/page';
 import { PrizePage } from './src/pages/prize/page';
 import { CreatePage } from './src/pages/create/page';
 import { TestPage } from './src/pages/test/page';
+import { ProfilePage } from './src/pages/profile/page';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,7 @@ export default function App() {
           <Stack.Screen name="Prize" component={PrizePage} />
           <Stack.Screen name="Create" component={CreatePage} />
           <Stack.Screen name="Test" component={TestPage} />
+          <Stack.Screen name="Profile" component={ProfilePage} />
         </Stack.Navigator>
       </Layout>
     </NavigationContainer>
