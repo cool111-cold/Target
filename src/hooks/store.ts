@@ -4,7 +4,7 @@ import { create } from "zustand";
 interface historyItem {
     name: string;
     date: string;
-    type: 'target' | 'prize';
+    type: 'target' | 'prize' | 'cupon';
     price: string | number;
 }
 

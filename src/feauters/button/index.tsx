@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, View, Text } from "react-native"
+import { TouchableOpacity, StyleSheet, View, Text, TextStyle } from "react-native"
 import { ProjectColors } from "../../../assets/colors"
 
 interface ButtonProps {
@@ -6,9 +6,10 @@ interface ButtonProps {
     containerStyle?: any,
     onClick: () => void,
     disabled?: boolean;
+    textStyle?: TextStyle;
 }
 
-export const Button = ({title, containerStyle, onClick, disabled}: ButtonProps) => {
+export const Button = ({title, containerStyle, onClick, disabled, textStyle}: ButtonProps) => {
     const handlePress = () => {
         if (!disabled) {
             onClick();
@@ -16,8 +17,8 @@ export const Button = ({title, containerStyle, onClick, disabled}: ButtonProps) 
     }
     return (
         <TouchableOpacity onPress={handlePress}>
-            <View style={[styles.container, containerStyle, {backgroundColor: disabled ? ProjectColors.lightGrey : ProjectColors.black}]}>
-                <Text style={styles.text}>{title}</Text>
+            <View style={[{backgroundColor: disabled ? ProjectColors.lightGrey : ProjectColors.black}, styles.container, containerStyle]}>
+                <Text style={[styles.text, textStyle]}>{title}</Text>
             </View>
         </TouchableOpacity>
     )

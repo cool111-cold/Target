@@ -48,10 +48,11 @@ export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
   const takeGift = (item: GiftProps) => {
     setHasGift(false);
     setIsClick(false);
+    const currentColl = item.value === 'defCupon' ? 1 : item.coll
     if (userData) {
       setUserData({
         ...userData,
-        [item.value]: userData[item.value] += item.coll,
+        [item.value]: userData[item.value] += currentColl,
         lastGiftDate: todayString
       })
     }

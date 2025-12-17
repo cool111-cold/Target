@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, Vibration, View } from "react-native"
 import { ProjectColors } from "../../../../assets/colors"
-import { Pizza, Target } from "../../../../assets/icons"
+import { Pizza, Target, CuponIcon } from "../../../../assets/icons"
 import React, { useState } from "react"
 import { Modal } from "../../../feauters/modal";
 import { useAppStore } from "../../../hooks/store";
@@ -8,7 +8,7 @@ import { useAppStore } from "../../../hooks/store";
 interface TaskProps {
     name: string;
     date: string;
-    type: 'target' | 'prize';
+    type: 'target' | 'prize' | 'cupon';
     price: string | number;
     index: number;
 }
@@ -25,9 +25,22 @@ const EmptyBLock = () => {
     )
 }
 
-const Task = ({ name, date, type, price, index }: TaskProps) => {
-    const isTarget = type === 'target';
+const Map = {
+    'target': {
+        icon: <Target width={25} height={25} color={ProjectColors.black} />,
+        simbol: '+'
+    },
+    'prize': {
+        icon: <Pizza width={25} height={25} color={ProjectColors.black} /> ,
+        simbol: '-'
+    },
+    'cupon': {
+        icon: <CuponIcon width={25} height={25} color={ProjectColors.black} />,
+        simbol: '-'
+    }
+}
 
+const Task = ({ name, date, type, price, index }: TaskProps) => {
     const [visibleModal, setVisibleModal] = useState(false);
     const removeHistoryItem = useAppStore((s) => s.removeHistoryItem);
 
@@ -46,18 +59,14 @@ const Task = ({ name, date, type, price, index }: TaskProps) => {
         <Pressable onLongPress={handleHoldPress}>
         <View style={styles.taskContainer}>
             <View style={styles.iconContainer}>
-                {isTarget ? 
-                    <Target width={25} height={25} color={ProjectColors.black} /> :
-                    <Pizza width={25} height={25} color={ProjectColors.black} /> 
-                }
-                
+                {Map[type].icon}
             </View>
             <View style={styles.taskTextBlock}>
                 <Text style={styles.taskText}>{name}</Text>
                 <Text style={styles.taskMiniText}>{date}</Text>
             </View>
             <View style={styles.priceBlock}>
-                <Text style={styles.priceText}>{`${isTarget ? '+' : '-'} ${price}.00`}</Text>
+                <Text style={styles.priceText}>{`${Map[type].simbol} ${price}.00`}</Text>
             </View>
         </View>
         </Pressable>
