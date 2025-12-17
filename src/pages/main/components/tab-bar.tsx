@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { ProjectColors } from "../../../../assets/colors"
 import { HomeIcon, CuponIcon, ProfileIcon } from "../../../../assets/icons"
-import { JSX, useState } from "react";
+import { JSX } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationProp } from "./links-block";
 
@@ -28,20 +28,28 @@ const Tab = ({name, icon, setActive, active, iconActive}: TabProps) => {
     )
 }
 
-export const TabBar = () => {
-    const [active, setActive] = useState('Home');
-    
+interface TabBarProps {
+    currentRoute: string;
+}
+
+export const TabBar = ({ currentRoute }: TabBarProps) => {
+    const active = currentRoute;
+
+    const setActive = (name: string) => {
+        // Навигация будет происходить в компоненте Tab
+    };
+
     return (
         <View style={styles.container}>
-            <Tab 
-                name="Home" 
+            <Tab
+                name="Home"
                 iconActive={<HomeIcon color={ProjectColors.black} width={30} height={30}/>}
                 icon={<HomeIcon color={ProjectColors.white} width={30} height={30}/>}
                 setActive={setActive}
                 active={active}
             />
-            <Tab 
-                name="Cupons" 
+            <Tab
+                name="Cupons"
                 iconActive={<CuponIcon color={ProjectColors.black} width={30} height={30}/>}
                 icon={<CuponIcon color={ProjectColors.white} width={30} height={30}/>}
                 setActive={setActive}

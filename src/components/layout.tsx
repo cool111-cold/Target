@@ -5,13 +5,14 @@ import { ReactNode } from 'react';
 interface LayoutProps {
   children: ReactNode;
   hide?: boolean;
+  currentRoute?: string;
 }
 
-export const Layout = ({ children, hide }: LayoutProps) => {
+export const Layout = ({ children, hide, currentRoute = 'Home' }: LayoutProps) => {
   return (
     <View style={styles.container}>
       {children}
-      {!hide && <TabBar />}
+      {!hide && <TabBar currentRoute={currentRoute} />}
     </View>
   );
 };

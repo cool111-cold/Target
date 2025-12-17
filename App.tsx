@@ -14,6 +14,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [hideTabBar, setHideTabBar] = React.useState(false);
+  const [currentRoute, setCurrentRoute] = React.useState('Home');
   const navigationRef = React.useRef(null);
   const hideBarPages = ['Create', 'Test']
   return (
@@ -21,12 +22,13 @@ export default function App() {
       ref={navigationRef}
       onStateChange={() => {
         // @ts-ignore
-        const currentRoute = navigationRef.current?.getCurrentRoute();
-        setHideTabBar(hideBarPages.includes(currentRoute?.name))
+        const route = navigationRef.current?.getCurrentRoute();
+        setHideTabBar(hideBarPages.includes(route?.name))
+        setCurrentRoute(route?.name || 'Home')
       }}
     >
-      <Layout hide={hideTabBar}>
-        <Stack.Navigator screenOptions={{ 
+      <Layout hide={hideTabBar} currentRoute={currentRoute}>
+        <Stack.Navigator screenOptions={{
           headerShown: false,
           animation: 'fade'
         }}>

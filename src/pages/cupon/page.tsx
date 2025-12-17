@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     },
     prize: {
       fontFamily: 'StackSansTextVariableFont',
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: '700',
     }
 });
