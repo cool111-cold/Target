@@ -2,5 +2,32 @@ import { Language } from "./language-type";
 
 
 export const RU: Language = {
-    'one': 'один'
+    'one': 'один',
+    'Sunday': 'Воскресенье',
+    'Monday': 'Понедельник',
+    'Tuesday': 'Вторник',
+    'Wednesday': 'Среда',
+    'Thursday': 'Четверг',
+    'Friday': 'Пятница',
+    'Saturday': 'Суббота',
+    'days': 'дней',
+    'lvl': 'уровень',
+    'greatYouGot': 'Поздравляем! вы получили',
+    'xpForYouLevel': 'опыт для твоего уровня',
+    'ephirForUpdateTargets': 'эфир для улучшения твоих целей',
+    'coinsToPurchaseCupons': 'коинов для покупки купонов',
+    'ballsToPurchasePrizes': 'баллов для покупки призов',
+    'regularCouponForFreePurchase': 'обычный купон для покупки ежедневных призов',
+    'couponForFreePurchase': 'купон для бесплатной покупки любого приза',
+    'get': 'Получить',
+    'takeTest': 'Вы можете просто пройти тест',
+    'Target': 'Цели',
+    'Prize': 'Призы',
+    'points': 'пунктов',
+    'recent': 'Последние',
+    'transactions': 'Транзакции',
+    'deleted': 'Удалить',
+    'shureDeleteOperation': 'Вы уверены что хотите удалить эту операцию?',
+    'deleteOperation': 'Удалить операцию?',
+    'emptyOperations': 'Совершите транзакцию чтобы она отобразилась здесь'
 }

@@ -1,8 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ArrowRight } from "../../../../assets/icons";
 import { ProjectColors } from "../../../../assets/colors";
+import { useTranslate as t } from "../../../feauters/text/use-translate";
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+type dateType = 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
 
 export const CalendarBlock = () => {
   const date = new Date();
@@ -10,7 +12,7 @@ export const CalendarBlock = () => {
   return (
     <TouchableOpacity>
       <View style={styles.calendarBlock}>
-        <Text style={styles.text}>{`${DAYS[date.getDay()]}, ${date.getDate()}`}</Text>
+        <Text style={styles.text}>{`${t(DAYS[date.getDay()] as dateType)}, ${date.getDate()}`}</Text>
         <Text style={styles.miniText}>{`${date.getDay() === 0 ? '7' : date.getDay()}/7`}</Text>
         <View style={styles.iconBlock}>
           <ArrowRight />

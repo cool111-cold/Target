@@ -4,6 +4,7 @@ import { Pizza, Target, CuponIcon } from "../../../../assets/icons"
 import React, { useState } from "react"
 import { Modal } from "../../../feauters/modal";
 import { useAppStore } from "../../../hooks/store";
+import { useTranslate as t } from "../../../feauters/text/use-translate";
 
 interface TaskProps {
     name: string;
@@ -20,7 +21,7 @@ interface TrackListProps {
 const EmptyBLock = () => {
     return (
         <View style={styles.emptyContainer}>
-            <Text style={[styles.taskText, {textAlign: 'center'}]}>Make a transaction to make it appear here</Text>
+            <Text style={[styles.taskText, {textAlign: 'center'}]}>{t('emptyOperations')}</Text>
         </View>
     )
 }
@@ -72,10 +73,10 @@ const Task = ({ name, date, type, price, index }: TaskProps) => {
         </Pressable>
 
         <Modal
-            buttonTitle="Deleted"
-            message="Are you sure you want to delete the operation?"
+            buttonTitle={t('deleted')}
+            message={t('shureDeleteOperation')}
             onClose={() => setVisibleModal(false)}
-            title="Delete operation?"
+            title={t('deleteOperation')}
             visible={visibleModal}
             onConfirm={handleDelete}
         />
@@ -112,8 +113,8 @@ export const MainTasks = () => {
     
     return (
         <View style={styles.container}>
-            <Text style={styles.miniText}>Recent</Text>
-            <Text style={styles.text}>Transactions</Text>
+            <Text style={styles.miniText}>{t('recent')}</Text>
+            <Text style={styles.text}>{t('transactions')}</Text>
             <TaskList list={testData} />
         </View>
     )

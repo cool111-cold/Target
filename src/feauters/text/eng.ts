@@ -1,5 +1,32 @@
 import { Language } from "./language-type";
 
 export const ENG: Language = {
-    'one': 'one'
+    'one': 'one',
+    'Sunday': 'Sunday',
+    'Monday': 'Monday',
+    'Tuesday': 'Tuesday',
+    'Wednesday': 'Wednesday',
+    'Thursday': 'Thursday',
+    'Friday': 'Friday',
+    'Saturday': 'Saturday',
+    'days': 'days',
+    'lvl': 'lvl',
+    'greatYouGot': 'Great! you got',
+    'xpForYouLevel': 'xp for you level',
+    'ephirForUpdateTargets': 'ephir for update your targets',
+    'coinsToPurchaseCupons': 'coins to purchase coupons',
+    'ballsToPurchasePrizes': 'balls to purchase prizes',
+    'regularCouponForFreePurchase': 'a regular coupon for a free purchase of any daily prize',
+    'couponForFreePurchase': 'coupon for free purchase of any prize',
+    'get': 'Get',
+    'takeTest': 'Do you just want to take the test?',
+    'Target': 'Target',
+    'Prize': 'Prize',
+    'points': 'points',
+    'recent': 'Recent',
+    'transactions': 'Transactions',
+    'deleted': 'Deleted',
+    'shureDeleteOperation': 'Are you sure you want to delete the operation?',
+    'deleteOperation': 'Delete operation?',
+    'emptyOperations': 'Make a transaction to make it appear here'
 }

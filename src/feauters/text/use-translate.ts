@@ -41,7 +41,7 @@ export const useLanguageStore = create<LanguageState>((set) => ({
     },
 }));
 
-export const useTranslate = (value: keyof Language) => {
+export const useTranslate = (value: keyof Language): string => {
     const currentLanguage = useLanguageStore((s) => s.currentLanguage);
     return Map[currentLanguage][value];
 }

@@ -5,6 +5,7 @@ import { Gift } from "./gift";
 import { CloseGift, OpenGift } from "../../../../assets/icons";
 import { useAppStore } from "../../../hooks/store";
 import { daysBetween } from "../../../hooks/use-day-betweens";
+import { useTranslate as t } from "../../../feauters/text/use-translate";
 
 
 interface BalanceProps {
@@ -73,7 +74,7 @@ export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
             </View>
             
             <Text style={styles.balanceText}>{userData?.ball ?? 0}</Text>
-            <Text style={styles.balanceMiniText}>{`${currentDay ?? 0} days / ${userData?.lvl ?? 0} lvl`}</Text>
+            <Text style={styles.balanceMiniText}>{`${currentDay ?? 0} ${t("days")} / ${userData?.lvl ?? 0} ${t("lvl")}`}</Text>
           </View>
         </TouchableOpacity>
       </View>

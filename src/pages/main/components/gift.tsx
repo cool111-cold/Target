@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, w
 import { CloseGift } from "../../../../assets/icons";
 import { ProjectColors } from "../../../../assets/colors";
 import { Modal } from "../../../feauters/modal";
+import { useTranslate as t } from "../../../feauters/text/use-translate";
 
 
 interface Prize {
@@ -15,13 +16,16 @@ interface GiftProps {
   prize: Prize;
 }
 
+type giftMap = 'xpForYouLevel' | 'ephirForUpdateTargets' | 'coinsToPurchaseCupons' |
+ 'ballsToPurchasePrizes' | 'regularCouponForFreePurchase' | 'couponForFreePurchase'
+
 const GiftMap = {
-  'xp': 'xp for you level',
-  'ephir': 'ephir for update your targets',
-  'coin': 'coins to purchase coupons',
-  'ball': 'balls to purchase prizes',
-  'defCupon': 'a regular coupon for a free purchase of any daily prize',
-  'cupon': 'coupon for free purchase of any prize'
+  'xp': 'xpForYouLevel',
+  'ephir': 'ephirForUpdateTargets',
+  'coin': 'coinsToPurchaseCupons',
+  'ball': 'ballsToPurchasePrize',
+  'defCupon': 'regularCouponForFreePurchase',
+  'cupon': 'couponForFreePurchase'
 }
 
 export const Gift = ({ onTake, prize }: GiftProps) => {
@@ -60,7 +64,7 @@ export const Gift = ({ onTake, prize }: GiftProps) => {
           <CloseGift color='#DFDEDA'/>
         </Animated.View>
       </TouchableOpacity>
-      <Modal title={'Great! you got'} message={`${isCupon ? '1' : prize.coll} ${GiftMap[prize.value]}`} buttonTitle={'Get'} visible={modalVisible} onClose={handleTakeGift}/>
+      <Modal title={t('greatYouGot')} message={`${isCupon ? '1' : prize.coll} ${t(GiftMap[prize.value] as giftMap)}`} buttonTitle={t('get')} visible={modalVisible} onClose={handleTakeGift}/>
     </>
   )
 }

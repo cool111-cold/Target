@@ -4,6 +4,7 @@ import { Target, Pizza } from "../../../../assets/icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppStore } from "../../../hooks/store";
+import { useTranslate as t } from "../../../feauters/text/use-translate";
 
 type RootStackParamList = {
     Home: undefined;
@@ -32,8 +33,8 @@ const BLock = ({type, points = 0}: BLockProps) => {
         // <TouchableOpacity style={[styles.block, {backgroundColor: isType ? COLORS[2] : COLORS[0]}]}>
         <TouchableOpacity  onPress={() => navigation.navigate(isType ? 'Target' : 'Prize')} style={[styles.block, {backgroundColor: isType ? ProjectColors.black : ProjectColors.white}]}>
             {isType ? <Target color={COLORS[1]} /> : <Pizza color={COLORS[0]}/>}
-            <Text style={[styles.text, {color: isType ? COLORS[1] : COLORS[0]}]}>{isType ? "Target" : "Prize"}</Text>
-            <Text style={[styles.miniText, {color: isType ? COLORS[1] : COLORS[0]}]}>{`${points} points`}</Text>           
+            <Text style={[styles.text, {color: isType ? COLORS[1] : COLORS[0]}]}>{t(isType ? "Target" : "Prize")}</Text>
+            <Text style={[styles.miniText, {color: isType ? COLORS[1] : COLORS[0]}]}>{`${points} ${t('points')}`}</Text>           
         </TouchableOpacity>
     )
 }

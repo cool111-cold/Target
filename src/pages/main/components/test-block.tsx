@@ -6,6 +6,7 @@ import { ProjectColors } from "../../../../assets/colors";
 import { NavigationProp } from "./links-block";
 import { useNavigation } from "@react-navigation/native";
 import { useAppStore } from "../../../hooks/store";
+import { useTranslate as t } from "../../../feauters/text/use-translate";
 
 const { width } = Dimensions.get('window');
 const COLORS = ['#ff6fd8', '#2575fc', '#6a11cb'];
@@ -55,7 +56,7 @@ export const TestBlock = () => {
                 style={styles.gradient}
                 />
             </Animated.View>
-                <Text style={styles.balanceText}>Do you just want to take the test?</Text>
+                <Text style={styles.balanceText}>{t('takeTest')}</Text>
             </View>
         </TouchableOpacity>
       );
