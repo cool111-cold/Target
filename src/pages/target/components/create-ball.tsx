@@ -6,7 +6,6 @@ export const TargetBallPicker = ({ onValueChange, currentValue }: { onValueChang
   const [value, setValue] = useState(currentValue || 1);
   const flatListRef = useRef(null);
 
-  // Вызываем onValueChange при первом рендере с начальным значением
   useEffect(() => {
     if (currentValue === undefined) {
       onValueChange(1);

@@ -10,6 +10,7 @@ import { CreatePage } from './src/pages/create/page';
 import { TestPage } from './src/pages/test/page';
 import { ProfilePage } from './src/pages/profile/page';
 import { Linking } from 'react-native';
+import { useLanguageStore } from './src/feauters/text/use-translate';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,12 @@ export default function App() {
   const [hideTabBar, setHideTabBar] = React.useState(false);
   const [currentRoute, setCurrentRoute] = React.useState('Home');
   const navigationRef = React.useRef(null);
-  const hideBarPages = ['Create', 'Test']
+  const hideBarPages = ['Create', 'Test'];
+  const loadLanguage = useLanguageStore((s) => s.loadLanguage);
+
+  React.useEffect(() => {
+    loadLanguage();
+  }, []);
 
   React.useEffect(() => {
     const handleUrl = (url: string) => {
