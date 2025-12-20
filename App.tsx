@@ -9,6 +9,7 @@ import { PrizePage } from './src/pages/prize/page';
 import { CreatePage } from './src/pages/create/page';
 import { TestPage } from './src/pages/test/page';
 import { ProfilePage } from './src/pages/profile/page';
+import { Linking } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,43 @@ export default function App() {
   const [currentRoute, setCurrentRoute] = React.useState('Home');
   const navigationRef = React.useRef(null);
   const hideBarPages = ['Create', 'Test']
+
+  React.useEffect(() => {
+    const handleUrl = (url: string) => {
+      console.log('Full URL:', url);
+
+      // Парсим URL и извлекаем параметр data
+      const match = url.match(/[?&]data=([^&]+)/);
+      const userData = match ? match[1] : null;
+
+      if (userData) {
+        try {
+          const parsedUserData = JSON.parse(decodeURIComponent(userData));
+          console.log('userData:', parsedUserData);
+        } catch (error) {
+          console.log('userData (raw):', userData);
+        }
+      }
+    };
+
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      console.log('Opened via QR link:', url);
+      handleUrl(url);
+    });
+
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        console.log('Initial URL:', url);
+        handleUrl(url);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
   return (
     <NavigationContainer
       ref={navigationRef}
