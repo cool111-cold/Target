@@ -191,13 +191,22 @@ export const TestPage = () => {
     const addHistoryItem = useAppStore((s) => s.addHistoryItem);
     const incrementRewards = useAppStore((s) => s.incrementRewards);
     const updateUserData = useAppStore((s) => s.updateUserData);
-    const data = userData?.targets?.filter((e) => e.type === 'Daily');
 
     const [finalBall, setFinalBall] = useState(0);
     const [visibleText, setVisibleText] = useState(0);
     const [currentItem, setCurrentItem] = useState(0);
     const [finalCount, setFinalCount] = useState(0);
     const [completedTasks, setCompletedTasks] = useState<targetData[]>([]);
+
+    const data = userData?.targets?.filter((e) => e.type === 'Daily');
+
+    if (!data || data.length === 0) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>No daily targets available</Text>
+            </View>
+        );
+    }
 
     const handleSetItem = (item: targetData | undefined, isCompleted: boolean) => {
         console.log('handleSetItem called:', { item, isCompleted });

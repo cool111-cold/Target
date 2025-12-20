@@ -20,7 +20,8 @@ export const TestBlock = () => {
     const progress = useSharedValue(0);
     const navigation = useNavigation<NavigationProp>();
     const userData = useAppStore((s) => s.userData);
-    
+    const text = t('takeTest')
+
       useEffect(() => {
         progress.value = withRepeat(
           withTiming(1, { duration: 6000 }),
@@ -28,7 +29,7 @@ export const TestBlock = () => {
           true
         );
       }, []);
-    
+
       const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ translateX: -width + progress.value * width }],
       }));
@@ -56,7 +57,7 @@ export const TestBlock = () => {
                 style={styles.gradient}
                 />
             </Animated.View>
-                <Text style={styles.balanceText}>{t('takeTest')}</Text>
+                <Text style={styles.balanceText}>{text}</Text>
             </View>
         </TouchableOpacity>
       );
