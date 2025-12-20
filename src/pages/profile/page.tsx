@@ -14,6 +14,10 @@ export const ProfilePage = () => {
     const currentLanguage = useLanguageStore((s) => s.currentLanguage);
     const setLanguage = useLanguageStore((s) => s.setLanguage);
 
+    if (!__DEV__) {
+      return <View style={styles.container} />
+    }
+
     return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
