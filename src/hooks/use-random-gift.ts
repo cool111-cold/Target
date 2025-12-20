@@ -15,10 +15,11 @@ const Prize = {
 
 interface useRandomGiftProps {
     type: 'daily' | 'weekly'
+    localRevards?: any[]
 }
 
-export const useRandomGift = ({type}: useRandomGiftProps) => {
-    const rewards = [
+export const useRandomGift = ({type, localRevards}: useRandomGiftProps) => {
+    const rewards = localRevards ? localRevards : [
         { name: "1", chance: type === 'daily' ? 95 : 79 },
         { name: "2", chance: type === 'daily' ? 5 : 20 },
         { name: "3", chance: type === 'daily' ? 0 : 1 },

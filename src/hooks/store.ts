@@ -26,6 +26,7 @@ interface prizeData {
 
 export interface UserData {
     xp: number;
+    lvl?: number,
     ball: number;
     data: string;
     history: historyItem[];
@@ -48,6 +49,7 @@ interface AppState {
     updateUserData: (partial: Partial<UserData>) => Promise<void>;
     addHistoryItem: (item: historyItem) => Promise<void>;
     incrementRewards: (xp: number, ball: number) => Promise<void>;
+    upLevel: () => Promise<void>;
     addTarget: (target: targetData) => Promise<void>;
     updateTarget: (index: number, target: targetData) => Promise<void>;
     removeTarget: (index: number) => Promise<void>;
@@ -112,6 +114,19 @@ export const useAppStore = create<AppState>((set, get) => ({
             ...currentData,
             xp: currentData.xp + xp,
             ball: currentData.ball + ball
+        };
+        set({ userData: newData });
+        await AsyncStorage.setItem("userData", JSON.stringify(newData));
+    },
+
+    upLevel: async () => {
+        const currentData = get().userData;
+        if (!currentData) return;
+
+        const newData = {
+            ...currentData,
+            lvl: (currentData.lvl ?? 0) + 1,
+            xp: 0
         };
         set({ userData: newData });
         await AsyncStorage.setItem("userData", JSON.stringify(newData));

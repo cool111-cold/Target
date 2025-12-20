@@ -73,7 +73,7 @@ export const BalanceBlock = ({isClick, setIsClick}: BalanceProps) => {
             </View>
             
             <Text style={styles.balanceText}>{userData?.ball ?? 0}</Text>
-            <Text style={styles.balanceMiniText}>{`${currentDay ?? 0} days / ${userData?.xp ?? 0} lvl`}</Text>
+            <Text style={styles.balanceMiniText}>{`${currentDay ?? 0} days / ${userData?.lvl ?? 0} lvl`}</Text>
           </View>
         </TouchableOpacity>
       </View>

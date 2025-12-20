@@ -1,18 +1,61 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
 import { CloseGift, OpenGift } from "../../../../assets/icons";
 import { useAppStore } from "../../../hooks/store";
+import { getXpNextLevel, getGiftForLvl } from "../../../hooks/level";
+import { useEffect, useState } from "react";
+import { Modal } from "../../../feauters/modal";
+
+const GiftMap = {
+  'xp': 'xp for you level',
+  'ephir': 'ephir for update your targets',
+  'coin': 'coins to purchase coupons',
+  'ball': 'balls to purchase prizes',
+  'defCupon': 'a regular coupon for a free purchase of any daily prize',
+  'cupon': 'coupon for free purchase of any prize'
+}
 
 export const ExpBlock = () => {
-  const hasGift = false;
+  const [hasGift, setHasGift] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMesage] = useState('');
   const COLORS = ['#e53b3b', '#a774c3', '#444245'];
   const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
 
   const userData = useAppStore((s) => s.userData);
+  const upLevel = useAppStore((s) => s.upLevel);
+  const setUserData = useAppStore((s) => s.setUserData);
   const exp = userData?.xp ?? 0;
-  const targetExp = 100;
+  const lvl = userData?.lvl ?? 0;
+  const targetExp = getXpNextLevel({lvl})
+
+  useEffect(()=>{
+    if (exp >= targetExp && targetExp > 0) {
+      console.log(getGiftForLvl({lvl: lvl + 1}))
+      setHasGift(true);
+    }
+  },[exp, targetExp, upLevel, lvl])
+
+  const handleTakeGift = () => {
+    const gift = getGiftForLvl({lvl: lvl});
+    if (userData && gift && hasGift) {
+      const currentColl = gift.value === 'defCupon' ? 1 : gift.coll
+      setModalMesage(`${gift.value === 'defCupon' ? '1' : gift.coll} ${GiftMap[gift.value]}`);
+      setUserData({
+        ...userData,
+        xp: (userData.xp ?? 0) - targetExp,
+        lvl: (userData.lvl ?? 0) + 1,
+        [gift.value]: userData[gift.value] += currentColl,
+      })
+      setHasGift(false);
+      setModalVisible(true);
+    }
+  }
+
   return (
+    <>
     <View style={styles.balanceEXPBlockWrapper}>
-      <TouchableOpacity onPress={() => console.log('///')}>
+      <TouchableOpacity onPress={handleTakeGift} disabled={!hasGift}>
         <View style={styles.balanceContent}>
           {hasGift && <View style={styles.redPoint} />}
           <View style={styles.giftEXPBlock}>
@@ -26,6 +69,14 @@ export const ExpBlock = () => {
         </View>
       </TouchableOpacity>
     </View>
+    <Modal 
+      visible={modalVisible}
+      title={'Great! you got'}
+      message={modalMessage}
+      buttonTitle={"Get"}
+      onClose={()=>setModalVisible(false)}
+    />
+    </>
   );
 };
 

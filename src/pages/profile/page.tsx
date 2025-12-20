@@ -16,6 +16,7 @@ export const ProfilePage = () => {
         <Button title="reset test" onClick={() => updateUserData({lastTestDate: '2025-01-01'})} containerStyle={{marginTop: 42}}/>
         <Button title="reset gift" onClick={() => setUserData({...userData, lastGiftDate: '2025-01-01'})} containerStyle={{marginTop: 42}}/>
         <Button title="5000 coin" onClick={() => setUserData({...userData, coin: 5000})} containerStyle={{marginTop: 42}}/>
+        <Button title="1000 exp" onClick={() => setUserData({...userData, xp: 1000})} containerStyle={{marginTop: 42}}/>
         <Button title="DEL ALL" onClick={() => clearData()} containerStyle={{marginTop: 42}}/>
       </ScrollView>
     </View>
