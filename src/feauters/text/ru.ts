@@ -29,5 +29,7 @@ export const RU: Language = {
     'deleted': 'Удалить',
     'shureDeleteOperation': 'Вы уверены что хотите удалить эту операцию?',
     'deleteOperation': 'Удалить операцию?',
-    'emptyOperations': 'Совершите транзакцию чтобы она отобразилась здесь'
+    'emptyOperations': 'Совершите транзакцию чтобы она отобразилась здесь',
+    'timeToTest': 'Время пройти тест!',
+    'timeToTestMessage': 'Не забудьте пройти ежедневный тест'
 }

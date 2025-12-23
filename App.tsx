@@ -8,9 +8,11 @@ import { CuponPage } from './src/pages/cupon/page';
 import { PrizePage } from './src/pages/prize/page';
 import { CreatePage } from './src/pages/create/page';
 import { TestPage } from './src/pages/test/page';
+import { DevPage } from './src/pages/dev/page';
 import { ProfilePage } from './src/pages/profile/page';
 import { Linking } from 'react-native';
 import { useLanguageStore } from './src/feauters/text/use-translate';
+import { notificationService } from './src/feauters/notifications/notification-service';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +25,14 @@ export default function App() {
 
   React.useEffect(() => {
     loadLanguage();
+  }, []);
+
+  React.useEffect(() => {
+    const initNotifications = async () => {
+      await notificationService.initialize();
+      await notificationService.scheduleDailyTestReminder();
+    };
+    initNotifications();
   }, []);
 
   React.useEffect(() => {
@@ -83,6 +93,7 @@ export default function App() {
           <Stack.Screen name="Create" component={CreatePage} />
           <Stack.Screen name="Test" component={TestPage} />
           <Stack.Screen name="Profile" component={ProfilePage} />
+          <Stack.Screen name="Dev" component={DevPage} />
         </Stack.Navigator>
       </Layout>
     </NavigationContainer>

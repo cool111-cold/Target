@@ -26,5 +26,7 @@ export interface Language {
     'deleted': string,
     'shureDeleteOperation': string,
     'deleteOperation': string,
-    'emptyOperations': string
+    'emptyOperations': string,
+    'timeToTest': string,
+    'timeToTestMessage': string
 }

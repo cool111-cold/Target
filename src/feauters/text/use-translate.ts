@@ -45,3 +45,7 @@ export const useTranslate = (value: keyof Language): string => {
     const currentLanguage = useLanguageStore((s) => s.currentLanguage);
     return Map[currentLanguage][value];
 }
+export const translate = (value: keyof Language): string => {
+    const currentLanguage = useLanguageStore.getState().currentLanguage;
+    return Map[currentLanguage][value];
+}

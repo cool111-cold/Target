@@ -62,6 +62,13 @@ export const TabBar = ({ currentRoute }: TabBarProps) => {
                 setActive={setActive}
                 active={active}
             />
+            {__DEV__ && <Tab
+                name="Dev"
+                iconActive={<ProfileIcon color={ProjectColors.black} width={30} height={30}/>}
+                icon={<ProfileIcon color={ProjectColors.white} width={30} height={30}/>}
+                setActive={setActive}
+                active={active}
+            />}
         </View>
     )
 }

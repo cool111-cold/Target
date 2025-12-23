@@ -28,5 +28,7 @@ export const ENG: Language = {
     'deleted': 'Deleted',
     'shureDeleteOperation': 'Are you sure you want to delete the operation?',
     'deleteOperation': 'Delete operation?',
-    'emptyOperations': 'Make a transaction to make it appear here'
+    'emptyOperations': 'Make a transaction to make it appear here',
+    'timeToTest': 'Time to take the test!',
+    'timeToTestMessage': 'Dont forget to take the daily test'
 }
