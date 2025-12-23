@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
+import RNFS from 'react-native-fs';
+import DocumentPicker from 'react-native-document-picker';
 
 interface historyItem {
     name: string;
@@ -57,6 +59,8 @@ interface AppState {
     addPrize: (prize: prizeData) => Promise<void>;
     updatePrize: (index: number, prize: prizeData) => Promise<void>;
     removePrize: (index: number) => Promise<void>;
+    exportUserData: () => Promise<string>;
+    importUserData: () => Promise<void>;
   }
   
   
@@ -274,6 +278,51 @@ export const useAppStore = create<AppState>((set, get) => ({
         };
         set({ userData: newData });
         await AsyncStorage.setItem("userData", JSON.stringify(newData));
+    },
+
+    exportUserData: async () => {
+        const currentData = get().userData;
+        if (!currentData) {
+            throw new Error('No user data to export');
+        }
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const fileName = `userData_${timestamp}.json`;
+        const filePath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+
+        try {
+            await RNFS.writeFile(filePath, JSON.stringify(currentData, null, 2), 'utf8');
+            return filePath;
+        } catch (error) {
+            console.error('Export error:', error);
+            throw error;
+        }
+    },
+
+    importUserData: async () => {
+        try {
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+            });
+
+            if (!result || result.length === 0) {
+                throw new Error('No file selected');
+            }
+
+            const fileUri = result[0].uri;
+            const fileContent = await RNFS.readFile(fileUri, 'utf8');
+            const importedData: UserData = JSON.parse(fileContent);
+
+            set({ userData: importedData });
+            await AsyncStorage.setItem("userData", JSON.stringify(importedData));
+        } catch (error) {
+            if (DocumentPicker.isCancel(error)) {
+                console.log('User cancelled file picker');
+            } else {
+                console.error('Import error:', error);
+                throw error;
+            }
+        }
     },
 }));
 

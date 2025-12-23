@@ -1,18 +1,76 @@
-import { ScrollView, StyleSheet, View } from "react-native"
+import { ScrollView, StyleSheet, View, Alert, Platform } from "react-native"
 import { Button } from "../../feauters/button";
 import { useAppStore } from "../../hooks/store";
 import { QrCode } from "./components/scaner";
 import { useLanguageStore } from "../../feauters/text/use-translate";
 import { Text } from "../../feauters/text";
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useState } from "react";
+import { Modal } from "../../feauters/modal";
 
 export const ProfilePage = () => {
+    const [modalMessage, setModalMessage] = useState('');
     const userData = useAppStore((s) => s.userData);
     const setUserData = useAppStore((s) => s.setUserData);
     const updateUserData = useAppStore((s) => s.updateUserData);
     const clearData = useAppStore((s) => s.clearUserData);
+    const exportUserData = useAppStore((s) => s.exportUserData);
+    const importUserData = useAppStore((s) => s.importUserData);
 
     const currentLanguage = useLanguageStore((s) => s.currentLanguage);
     const setLanguage = useLanguageStore((s) => s.setLanguage);
+
+    const requestStoragePermission = async () => {
+        if (Platform.OS === 'android') {
+            const permission = Platform.Version >= 33
+                ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+                : PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE;
+
+            const result = await request(permission);
+            return result === RESULTS.GRANTED || result === RESULTS.LIMITED;
+        }
+        return true;
+    };
+
+    const handleExport = async () => {
+        try {
+            const hasPermission = await requestStoragePermission();
+            if (!hasPermission) {
+                setModalMessage('Storage permission is required to export data');
+                // Alert.alert('Permission Denied', 'Storage permission is required to export data');
+                return;
+            }
+
+            const filePath = await exportUserData();
+            setModalMessage(`Data exported to: ${filePath}`);
+            // Alert.alert('Success', `Data exported to: ${filePath}`);
+        } catch (error) {
+            setModalMessage('Failed to export data');
+            // Alert.alert('Error', 'Failed to export data');
+            console.error(error);
+        }
+    };
+
+    const handleImport = async () => {
+        try {
+            const hasPermission = await requestStoragePermission();
+            if (!hasPermission) {
+                setModalMessage('Storage permission is required to import data');
+                // Alert.alert('Permission Denied', 'Storage permission is required to import data');
+                return;
+            }
+
+            await importUserData();
+            setModalMessage('Data imported successfully');
+            // Alert.alert('Success', 'Data imported successfully');
+        } catch (error) {
+            if (error instanceof Error && error.message !== 'User cancelled file picker') {
+              setModalMessage('Failed to import data');
+                // Alert.alert('Error', 'Failed to import data');
+                console.error(error);
+            }
+        }
+    };
 
     if (!__DEV__) {
       return <View style={styles.container} />
@@ -50,7 +108,18 @@ export const ProfilePage = () => {
         <Button title="5000 coin" onClick={() => setUserData({...userData, coin: 5000})} containerStyle={{marginTop: 12}}/>
         <Button title="1000 exp" onClick={() => setUserData({...userData, xp: 1000})} containerStyle={{marginTop: 12}}/>
         <Button title="DEL ALL" onClick={() => clearData()} containerStyle={{marginTop: 12}}/>
+
+        <Text style={styles.sectionTitle}>Data Management</Text>
+        <Button title="Export Data" onClick={handleExport} containerStyle={{marginTop: 12}}/>
+        <Button title="Import Data" onClick={handleImport} containerStyle={{marginTop: 12, marginBottom: 100}}/>
       </ScrollView>
+      <Modal
+        visible={modalMessage !== ''}
+        title="And"
+        message={modalMessage}
+        buttonTitle={'ok'}
+        onClose={() => setModalMessage('')}
+      />
     </View>
     )
 }
