@@ -27,6 +27,7 @@ interface prizeData {
 }
 
 export interface UserData {
+    name?: string;
     xp: number;
     lvl?: number,
     ball: number;
@@ -318,6 +319,7 @@ export const useAppStore = create<AppState>((set, get) => ({
         } catch (error) {
             if (DocumentPicker.isCancel(error)) {
                 console.log('User cancelled file picker');
+                throw new Error('User cancelled file picker');
             } else {
                 console.error('Import error:', error);
                 throw error;

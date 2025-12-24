@@ -1,10 +1,10 @@
-import { TouchableOpacity, StyleSheet, View, TextStyle } from "react-native"
+import { TouchableOpacity, StyleSheet, View, TextStyle, ViewStyle } from "react-native"
 import { ProjectColors } from "../../../assets/colors"
 import { Text } from "../text";
 
 interface ButtonProps {
     title: string,
-    containerStyle?: any,
+    containerStyle?: ViewStyle,
     onClick: () => void,
     disabled?: boolean;
     textStyle?: TextStyle;

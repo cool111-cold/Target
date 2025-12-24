@@ -12,3 +12,4 @@ export * from './pen';
 export * from './save';
 export * from './face-smile';
 export * from './profile';
+export * from './loading';

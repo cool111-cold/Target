@@ -101,7 +101,7 @@ export const DevPage = () => {
           />
         </View>
 
-        <Text style={styles.sectionTitle}>Dev Tools</Text>
+        <Text style={styles.sectionTitle}>Dev Tools {userData?.name}</Text>
         <Button title="get 100 ephir" onClick={() => setUserData({...userData, ephir: 100})} containerStyle={{marginTop: 12}}/>
         <Button title="reset test" onClick={() => updateUserData({lastTestDate: '2025-01-01'})} containerStyle={{marginTop: 12}}/>
         <Button title="reset gift" onClick={() => setUserData({...userData, lastGiftDate: '2025-01-01'})} containerStyle={{marginTop: 12}}/>

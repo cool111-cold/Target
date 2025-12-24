@@ -9,23 +9,43 @@ import { PrizePage } from './src/pages/prize/page';
 import { CreatePage } from './src/pages/create/page';
 import { TestPage } from './src/pages/test/page';
 import { DevPage } from './src/pages/dev/page';
+import { RegistrationPage } from './src/pages/registration/page';
 import { ProfilePage } from './src/pages/profile/page';
-import { Linking } from 'react-native';
+import { Linking, View } from 'react-native';
 import { useLanguageStore } from './src/feauters/text/use-translate';
 import { notificationService } from './src/feauters/notifications/notification-service';
+import { useAppStore } from './src/hooks/store';
+import { Pizza } from './assets/icons';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const userData = useAppStore((s) => s.userData);
+  const loadUserData = useAppStore((s) => s.loadUserData);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [hideTabBar, setHideTabBar] = React.useState(false);
   const [currentRoute, setCurrentRoute] = React.useState('Home');
   const navigationRef = React.useRef(null);
-  const hideBarPages = ['Create', 'Test'];
+  const hideBarPages = ['Create', 'Test', 'Registration'];
   const loadLanguage = useLanguageStore((s) => s.loadLanguage);
 
   React.useEffect(() => {
-    loadLanguage();
+    const initialize = async () => {
+      await Promise.all([
+        loadUserData(),
+        loadLanguage()
+      ]);
+      setIsLoading(false);
+    };
+    initialize();
   }, []);
+
+  // Устанавливаем hideTabBar при загрузке данных
+  React.useEffect(() => {
+    if (!isLoading) {
+      setHideTabBar(!userData?.name);
+    }
+  }, [isLoading, userData?.name]);
 
   React.useEffect(() => {
     const initNotifications = async () => {
@@ -71,6 +91,10 @@ export default function App() {
   }, []);
 
 
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -86,6 +110,9 @@ export default function App() {
           headerShown: false,
           animation: 'fade'
         }}>
+          {!userData?.name &&
+            <Stack.Screen name="Registration" component={RegistrationPage} />
+          }
           <Stack.Screen name="Home" component={MainPage} />
           <Stack.Screen name="Target" component={TargetPage} />
           <Stack.Screen name="Cupons" component={CuponPage} />
@@ -99,3 +126,12 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const LoadingScreen = () => {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#DFDEDA' }}>
+      {/* <Spinner /> */}
+      <Pizza color='#000'/>
+    </View>
+  );
+};

@@ -14,6 +14,7 @@ type RootStackParamList = {
     Test: undefined;
     Profile: undefined;
     Dev: undefined;
+    Registration: undefined;
 };
 
 
