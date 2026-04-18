@@ -18,19 +18,19 @@ type CreatePageRouteProp = RouteProp<RootStackParamList, 'Create'>;
 const TestData = [
     {
         title: 'Type',
-        message: 'Select the target type',
+        message: 'Select the type',
         id: 0,
         Component: TargenCreateTypeButton
     },
     {
         title: 'Name',
-        message: 'Write the name of your target',
+        message: 'Write the name',
         id: 1,
         Component: TargetCreateNameInput,
     },
     {
         title: 'Price',
-        message: 'Specify the target price',
+        message: 'Specify the price',
         id: 2,
         Component: TargetBallPicker,
     },
@@ -144,6 +144,7 @@ export const CreatePage = () => {
         currentValue={answers.find(a => a.questionId === TestData[currentLabel].id)?.value}
         isEditMode={isEditMode}
         onDelete={handleDelete}
+        type={type}
     />
     </View>
     )

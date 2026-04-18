@@ -19,7 +19,7 @@ interface Question {
     title: string;
     message: string;
     id: number;
-    Component: (props: { onValueChange: (value: any) => void, currentValue?: any }) => JSX.Element;
+    Component: (props: { onValueChange: (value: any) => void, currentValue?: any, type?: 'target' | 'prize' }) => JSX.Element;
 }
 
 interface QuestionProps {
@@ -31,6 +31,7 @@ interface QuestionProps {
     currentValue?: any;
     isEditMode?: boolean;
     onDelete?: () => void;
+    type?: 'target' | 'prize';
 }
 
 // const Button = ({title, id, nextLabel, isLast}: buttonProps) => {
@@ -41,7 +42,7 @@ interface QuestionProps {
 //     )
 // }
 
-export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, currentValue, isEditMode, onDelete}: QuestionProps) => {
+export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, currentValue, isEditMode, onDelete, type}: QuestionProps) => {
     const handleValueChange = (value: any) => {
         onValueChange(item.id, value);
     };
@@ -53,7 +54,7 @@ export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, cur
                 <Text style={styles.message}>{item.message}</Text>
             </View>
             <View style={styles.buttonContainer}>
-                {item.Component({ onValueChange: handleValueChange, currentValue })}
+                {item.Component({ onValueChange: handleValueChange, currentValue, type })}
             </View>
             <View style={styles.navigationContainer}>
                 <TouchableOpacity style={styles.backButton} onPress={prevLabel}>
