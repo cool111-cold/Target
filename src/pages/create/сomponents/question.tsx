@@ -1,19 +1,10 @@
 import React, { JSX } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ProjectColors } from "../../../../assets/colors";
-
-interface Variants {
-    title: string;
-    id: number;
-}
-
-interface buttonProps {
-    onPress: () => void;
-    title: string;
-    id: number;
-    isLast?: boolean;
-    isSelected?: boolean;
-}
+import { ChevronLeftIcon } from "../../../../assets/icons/chevron-left";
+import { ChevronRightIcon } from "../../../../assets/icons/chevron-right";
+import { ChevronDoubleRightIcon } from "../../../../assets/icons/chevron-double-right";
+import { TrashIcon } from "../../../../assets/icons/trash-icon";
 
 interface Question {
     title: string;
@@ -24,6 +15,7 @@ interface Question {
 
 interface QuestionProps {
     item: Question;
+    isFirst?: boolean;
     isLast?: boolean;
     nextLabel: () => void;
     prevLabel: () => void;
@@ -32,6 +24,7 @@ interface QuestionProps {
     isEditMode?: boolean;
     onDelete?: () => void;
     type?: 'target' | 'prize';
+    isCurrentValueValid?: boolean;
 }
 
 // const Button = ({title, id, nextLabel, isLast}: buttonProps) => {
@@ -42,7 +35,11 @@ interface QuestionProps {
 //     )
 // }
 
-export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, currentValue, isEditMode, onDelete, type}: QuestionProps) => {
+
+const { width, height } = Dimensions.get('window')
+const ICON_SIZE = Math.round(Math.min(width, height) * 0.15)
+
+export const Question = ({item, isFirst, isLast, nextLabel, prevLabel, onValueChange, currentValue, isEditMode, onDelete, type, isCurrentValueValid}: QuestionProps) => {
     const handleValueChange = (value: any) => {
         onValueChange(item.id, value);
     };
@@ -54,17 +51,23 @@ export const Question = ({item, isLast, nextLabel, prevLabel, onValueChange, cur
                 <Text style={styles.message}>{item.message}</Text>
             </View>
             <View style={styles.buttonContainer}>
-                {item.Component({ onValueChange: handleValueChange, currentValue, type })}
+                <item.Component onValueChange={handleValueChange} currentValue={currentValue} type={type} />
             </View>
             <View style={styles.navigationContainer}>
-                <TouchableOpacity style={styles.backButton} onPress={prevLabel}>
-                    <Text>Back</Text>
+                <TouchableOpacity style={styles.backButton} onPress={prevLabel} disabled={isFirst}>
+                    <ChevronLeftIcon size={ICON_SIZE} color={isFirst ? ProjectColors.grey : ProjectColors.black} />
                 </TouchableOpacity>
                 {isEditMode && <TouchableOpacity style={styles.delButton} onPress={onDelete}>
-                    <Text style={{color: ProjectColors.orange}}>Delete</Text>
+                    <TrashIcon size={ICON_SIZE * 0.6} color={ProjectColors.orange} />
                 </TouchableOpacity>}
-                <TouchableOpacity style={[styles.createButton, {backgroundColor: ProjectColors.black}]} onPress={nextLabel} disabled={!currentValue}>
-                    <Text style={styles.createButtonText}>{isLast ? 'Finish' : 'Next'}</Text>
+                <TouchableOpacity style={styles.createButton} onPress={nextLabel} disabled={isCurrentValueValid !== undefined ? !isCurrentValueValid : !currentValue}>
+                    {(() => {
+                        const disabled = isCurrentValueValid !== undefined ? !isCurrentValueValid : !currentValue
+                        const color = disabled ? ProjectColors.grey : ProjectColors.black
+                        return isLast
+                            ? <ChevronDoubleRightIcon size={ICON_SIZE} color={color} />
+                            : <ChevronRightIcon size={ICON_SIZE} color={color} />
+                    })()}
                 </TouchableOpacity>
             </View>
         </View>
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: 'flex',
-        paddingVertical: 42
+        paddingTop: 42
     },
     textContainer: {
         width: '100%',
@@ -124,37 +127,21 @@ const styles = StyleSheet.create({
         height: 'auto',
         display: 'flex',
         justifyContent: 'space-between',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     backButton: {
-        width: 80,
-        height: 45,
-        borderColor: ProjectColors.black,
-        borderWidth: 2,
-        borderRadius: 5,
-        display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        padding: 8,
     },
     delButton: {
-        width: 80,
-        height: 45,
-        borderColor: ProjectColors.orange,
-        borderWidth: 2,
-        borderRadius: 5,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     createButton: {
-        width: 150,
-        height: 45,
-        borderRadius: 5,
-        display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
-    },
-    createButtonText: {
-        color: ProjectColors.white
+        justifyContent: 'center',
+        padding: 8,
     }
 })

@@ -30,7 +30,7 @@ interface ChoiceBarProps {
 }
 
 export const ChoiceBar = ({active, setActive}: ChoiceBarProps) => {
-    const barValue = ['Daily', 'Disposable', 'All'];
+    const barValue = ['Все', 'Ежедневная цель', 'Одноразовая', 'Напоминания', 'Крупная цель', 'Продолжительная цель', 'Прогрессивная цель'];
     return (
         <View style={styles.choiceList}>
             {barValue.map((item, index) => (

@@ -8,12 +8,12 @@ import { AddButton } from "../../components/add-button";
 import { useAppStore } from "../../hooks/store";
 
 export const TargetPage = () => {
-    const [activeFilter, setActiveFilter] = useState('Daily');
+    const [activeFilter, setActiveFilter] = useState('Все');
 
     const userData = useAppStore((s) => s.userData);
-    const TestData = userData?.targets 
+    const TestData = userData?.targets
 
-    const filteredData = activeFilter === 'All'
+    const filteredData = activeFilter === 'Все'
         ? TestData
         : TestData?.filter(item => item.type === activeFilter);
 

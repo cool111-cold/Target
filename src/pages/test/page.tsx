@@ -25,7 +25,7 @@ interface targetData {
     ball: number;
     ephir: number;
     data: string;
-    type: 'Daily' | 'Disposable'
+    type: string;
     color: number;
 }
 

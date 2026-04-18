@@ -12,11 +12,13 @@ interface historyItem {
 
 interface targetData {
     name: string;
+    description?: string;
     ball: number;
     ephir: number;
     data: string;
-    type: 'Daily' | 'Disposable'
+    type: string;
     color: number;
+    difficulty?: string;
 }
 
 interface prizeData {
