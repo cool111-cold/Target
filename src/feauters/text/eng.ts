@@ -57,4 +57,8 @@ export const ENG: Language = {
     'typeProgressiveName': 'Progressive goal',
     'typeProgressiveDesc': 'Shows current progress toward the goal. Reward for each step and for reaching the goal',
     'typeExamplePrefix': 'For example: ',
+    'stepDateTitle': 'Date',
+    'stepDateMessage': 'Select the date',
+    'stepGoalTitle': 'Goal',
+    'stepGoalMessage': 'Set the final goal value',
 }

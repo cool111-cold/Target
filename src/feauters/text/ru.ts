@@ -58,4 +58,8 @@ export const RU: Language = {
     'typeProgressiveName': 'Прогрессивная цель',
     'typeProgressiveDesc': 'Показывает текущий прогресс, насколько близок к цели. Награда за каждый шаг и за достижение цели',
     'typeExamplePrefix': 'Например: ',
+    'stepDateTitle': 'Дата',
+    'stepDateMessage': 'Выберите дату',
+    'stepGoalTitle': 'Цель',
+    'stepGoalMessage': 'Укажите конечное значение',
 }

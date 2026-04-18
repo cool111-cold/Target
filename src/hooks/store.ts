@@ -19,6 +19,8 @@ interface targetData {
     type: string;
     color: number;
     difficulty?: string;
+    dueDate?: string;
+    goalValue?: number;
 }
 
 interface prizeData {

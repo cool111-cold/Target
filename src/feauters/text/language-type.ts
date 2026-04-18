@@ -55,4 +55,8 @@ export interface Language {
     'typeProgressiveName': string,
     'typeProgressiveDesc': string,
     'typeExamplePrefix': string,
+    'stepDateTitle': string,
+    'stepDateMessage': string,
+    'stepGoalTitle': string,
+    'stepGoalMessage': string,
 }

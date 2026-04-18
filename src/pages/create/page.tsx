@@ -7,10 +7,13 @@ import { TargetCreateNameInput } from "../target/components/create-name-input";
 import { TargetBallPicker } from "../target/components/create-ball";
 import { TargetCreateNameDescriptionInput } from "../target/components/create-name-description-input";
 import { TargetCreateDifficultyButton } from "../target/components/create-difficulty-button";
+import { TargetCreateDatePicker } from "../target/components/create-date-picker";
+import { TargetCreateProgressiveGoalInput } from "../target/components/create-progressive-goal-input";
 import { useAppStore } from "../../hooks/store";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NavigationProp } from "../main/components/links-block";
 import { useTranslate as t } from "../../feauters/text/use-translate";
+import { TargetCreateDateTimePicker } from "../target/components/create-date-time-picker";
 
 type RootStackParamList = {
     Create: { targetIndex?: number; targetData?: any, type?: 'target' | 'prize' } | undefined;
@@ -28,16 +31,49 @@ export const CreatePage = () => {
     const type = route.params?.type;
     const isEditMode = targetIndex !== undefined && targetData !== undefined;
 
+    const labelStepName = t('stepNameTitle');
+    const labelStepNameMsg = t('stepTargetNameMessage');
+    const labelStepType = t('stepTypeTitle');
+    const labelStepTypeMsg = t('stepTargetTypeMessage');
+    const labelStepDifficulty = t('stepDifficultyTitle');
+    const labelStepDifficultyMsg = t('stepTargetDifficultyMessage');
+    const labelStepDate = t('stepDateTitle');
+    const labelStepDateMsg = t('stepDateMessage');
+    const labelStepGoal = t('stepGoalTitle');
+    const labelStepGoalMsg = t('stepGoalMessage');
+
+    const selectedType = answers.find(a => a.questionId === 1)?.value;
+    const isBigGoal = selectedType === 'Крупная цель';
+
+    const extraStep = (() => {
+        if (selectedType === 'Напоминания') {
+            return { title: labelStepDate, message: labelStepDateMsg, id: 2, Component: TargetCreateDateTimePicker };
+        }
+        if (selectedType === 'Продолжительная цель') {
+            return { title: labelStepDate, message: labelStepDateMsg, id: 2, Component: TargetCreateDatePicker };
+        }
+        if (selectedType === 'Прогрессивная цель') {
+            return { title: labelStepGoal, message: labelStepGoalMsg, id: 2, Component: TargetCreateProgressiveGoalInput };
+        }
+        return null;
+    })();
+
     const TargetSteps = [
-        { title: t('stepNameTitle'), message: t('stepTargetNameMessage'), id: 0, Component: TargetCreateNameDescriptionInput },
-        { title: t('stepTypeTitle'), message: t('stepTargetTypeMessage'), id: 1, Component: TargenCreateTypeButton },
-        { title: t('stepDifficultyTitle'), message: t('stepTargetDifficultyMessage'), id: 2, Component: TargetCreateDifficultyButton },
+        { title: labelStepName, message: labelStepNameMsg, id: 0, Component: TargetCreateNameDescriptionInput },
+        { title: labelStepType, message: labelStepTypeMsg, id: 1, Component: TargenCreateTypeButton },
+        ...(extraStep ? [extraStep] : []),
+        ...(!isBigGoal ? [{ title: labelStepDifficulty, message: labelStepDifficultyMsg, id: 3, Component: TargetCreateDifficultyButton }] : []),
     ];
 
+    const labelStepPrizeTypeMsg = t('stepPrizeTypeMessage');
+    const labelStepPrizeNameMsg = t('stepPrizeNameMessage');
+    const labelStepPriceTitle = t('stepPriceTitle');
+    const labelStepPrizePriceMsg = t('stepPrizePriceMessage');
+
     const PrizeSteps = [
-        { title: t('stepTypeTitle'), message: t('stepPrizeTypeMessage'), id: 0, Component: TargenCreateTypeButton },
-        { title: t('stepNameTitle'), message: t('stepPrizeNameMessage'), id: 1, Component: TargetCreateNameInput },
-        { title: t('stepPriceTitle'), message: t('stepPrizePriceMessage'), id: 2, Component: TargetBallPicker },
+        { title: labelStepType, message: labelStepPrizeTypeMsg, id: 0, Component: TargenCreateTypeButton },
+        { title: labelStepName, message: labelStepPrizeNameMsg, id: 1, Component: TargetCreateNameInput },
+        { title: labelStepPriceTitle, message: labelStepPrizePriceMsg, id: 2, Component: TargetBallPicker },
     ];
 
     const Steps = type === 'target' ? TargetSteps : PrizeSteps;
@@ -48,7 +84,8 @@ export const CreatePage = () => {
                 setAnswers([
                     { questionId: 0, value: { name: targetData.name, description: targetData.description ?? '' } },
                     { questionId: 1, value: targetData.type },
-                    { questionId: 2, value: targetData.difficulty },
+                    { questionId: 2, value: targetData.dueDate ?? targetData.goalValue ?? undefined },
+                    { questionId: 3, value: targetData.difficulty },
                 ]);
             } else {
                 setAnswers([
@@ -92,14 +129,17 @@ export const CreatePage = () => {
     };
 
     const handleNext = () => {
-        if (Steps[currentLabel].id === Steps.length - 1) {
+        if (currentLabel === Steps.length - 1) {
             if (type === 'target') {
                 const nameDesc = answers.find(a => a.questionId === 0)?.value;
+                const extraValue = answers.find(a => a.questionId === 2)?.value;
                 const targetPayload = {
                     name: nameDesc?.name ?? '',
                     description: nameDesc?.description ?? '',
-                    type: answers.find(a => a.questionId === 1)?.value,
-                    difficulty: answers.find(a => a.questionId === 2)?.value,
+                    type: selectedType,
+                    difficulty: isBigGoal ? 'Эпическая' : answers.find(a => a.questionId === 3)?.value,
+                    dueDate: (selectedType === 'Напоминания' || selectedType === 'Продолжительная цель') ? extraValue : undefined,
+                    goalValue: selectedType === 'Прогрессивная цель' ? extraValue : undefined,
                     data: new Date().toLocaleDateString("ru-RU").toString(),
                     ball: targetData?.ball || 0,
                     color: targetData?.color || 0,
@@ -152,7 +192,7 @@ export const CreatePage = () => {
       <Question
         item={Steps[currentLabel]}
         isFirst={currentLabel === 0}
-        isLast={Steps[currentLabel].id === Steps.length - 1}
+        isLast={currentLabel === Steps.length - 1}
         nextLabel={handleNext}
         prevLabel={() => setCurrentLabel((e) => e -= 1)}
         onValueChange={handleSelectAnswer}
