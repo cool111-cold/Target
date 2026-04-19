@@ -33,7 +33,6 @@ interface Data {
 
 interface GoalCardProps {
     item: Data;
-    index: number;
     storeIndex: number;
 }
 
@@ -117,13 +116,18 @@ const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
 const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
     const [isEditModal, setIsEditModal] = useState(false);
     const [isProgressModal, setIsProgressModal] = useState(false);
+    const [isCompleteModal, setIsCompleteModal] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const updateTarget = useAppStore(s => s.updateTarget);
+    const removeTarget = useAppStore(s => s.removeTarget);
+    const incrementRewards = useAppStore(s => s.incrementRewards);
+    const addHistoryItem = useAppStore(s => s.addHistoryItem);
     const navigation = useNavigation<NavigationProp>();
 
     const current = item.ephir ?? 0;
     const goal = item.goalValue ?? 0;
     const progress = goal > 0 ? Math.min(current / goal, 1) : 0;
+    const isCompleted = progress >= 1;
 
     const handleAddProgress = () => {
         const delta = parseInt(inputValue);
@@ -132,6 +136,18 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
         updateTarget(storeIndex, { ...item, ephir: newValue } as any);
         setInputValue('');
         setIsProgressModal(false);
+    };
+
+    const confirmComplete = async () => {
+        setIsCompleteModal(false);
+        await incrementRewards(10, item.ball);
+        await addHistoryItem({
+            name: item.name,
+            date: new Date().toLocaleDateString('ru-RU'),
+            type: 'target',
+            price: item.ball,
+        });
+        await removeTarget(storeIndex);
     };
 
     return (
@@ -165,11 +181,14 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={[styles.completeBtn, { backgroundColor: ProjectColors.purple }]}
-                    onPress={() => { setInputValue(''); setIsProgressModal(true); }}
+                    style={[styles.completeBtn, { backgroundColor: isCompleted ? 'rgba(255,255,255,0.1)' : ProjectColors.purple }]}
+                    onPress={() => isCompleted ? setIsCompleteModal(true) : (setInputValue(''), setIsProgressModal(true))}
                     activeOpacity={0.75}
                 >
-                    <Text style={styles.completeBtnText}>+ Добавить</Text>
+                    {isCompleted
+                        ? <><CheckIcon size={20} color={ProjectColors.white} /><Text style={styles.completeBtnText}>Выполнить!</Text></>
+                        : <Text style={styles.completeBtnText}>+ Добавить</Text>
+                    }
                 </TouchableOpacity>
             </View>
 
@@ -215,6 +234,15 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
                     </View>
                 </View>
             </RNModal>
+
+            <Modal
+                title="Достигнуто!"
+                message={`Засчитать «${item.name}»? Получишь ${item.ball} баллов.`}
+                buttonTitle="Да, достиг!"
+                visible={isCompleteModal}
+                onClose={() => setIsCompleteModal(false)}
+                onConfirm={confirmComplete}
+            />
         </>
     );
 };
@@ -232,11 +260,11 @@ export const GoalTargetList = ({ Data }: GoalListProps) => {
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                snapToInterval={CARD_WIDTH + CARD_GAP}
+                snapToOffsets={Data.map((_, i) => i === 0 ? 0 : i * (CARD_WIDTH + CARD_GAP) - PAGE_PADDING)}
                 decelerationRate="fast"
                 contentContainerStyle={styles.scrollContent}
             >
-                {Data.map(({ item, storeIndex }, index) =>
+                {Data.map(({ item, storeIndex }) =>
                     item.type === TARGET_TYPE_IDS.BIG_GOAL
                         ? <BigGoalCard key={storeIndex} item={item} storeIndex={storeIndex} />
                         : <ProgressiveCard key={storeIndex} item={item} storeIndex={storeIndex} />

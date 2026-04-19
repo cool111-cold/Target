@@ -14,7 +14,9 @@ export const TargetPage = () => {
     const userData = useAppStore((s) => s.userData);
     const TestData = userData?.targets
 
-    const DailyItems = TestData?.filter(item => item.type === TARGET_TYPE_IDS.DAILY)
+    const DailyItems = TestData
+        ?.map((item, storeIndex) => ({ item, storeIndex }))
+        .filter(({ item }) => item.type === TARGET_TYPE_IDS.DAILY)
     const MainItems = TestData
         ?.map((item, storeIndex) => ({ item, storeIndex }))
         .filter(({ item }) => item.type === TARGET_TYPE_IDS.ONE_TIME || item.type === TARGET_TYPE_IDS.REMINDER || item.type === TARGET_TYPE_IDS.DURATION)

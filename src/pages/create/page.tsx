@@ -145,6 +145,7 @@ export const CreatePage = () => {
                     ball: targetData?.ball || 0,
                     color: targetData?.color || 0,
                     ephir: targetData?.ephir || 0,
+                    lastCompleted: targetData?.lastCompleted,
                 };
 
                 if (isEditMode) {

@@ -21,14 +21,14 @@ interface Data {
 
 interface TargetProps {
     item: Data;
-    index: number;
+    storeIndex: number;
 }
 
 const DIFFICULTY_COLORS = ['#afe3bd', '#dce39a', '#d2afe3', '#e0bac0'];
 
 const today = new Date().toLocaleDateString("ru-RU");
 
-const Target = ({ item, index }: TargetProps) => {
+const Target = ({ item, storeIndex }: TargetProps) => {
     const [ephirState, setEphirState] = useState(item.ephir);
     const [isModal, setIsModal] = useState(false);
     const [markedToday, setMarkedToday] = useState(item.lastCompleted === today);
@@ -48,9 +48,9 @@ const Target = ({ item, index }: TargetProps) => {
         addHistoryItem({ name: item.name, date: today, price: item.ball, type: 'target' });
 
         if (item.type === 'Disposable') {
-            removeTarget(index);
+            removeTarget(storeIndex);
         } else {
-            updateTarget(index, { ...item, ephir: 0, lastCompleted: today } as any);
+            updateTarget(storeIndex, { ...item, ephir: 0, lastCompleted: today } as any);
             setEphirState(0);
             setMarkedToday(true);
         }
@@ -99,7 +99,7 @@ const Target = ({ item, index }: TargetProps) => {
                 onClose={() => setIsModal(false)}
                 onConfirm={() => {
                     setIsModal(false);
-                    navigation.navigate('Create', { targetIndex: index, targetData: item, type: 'target' });
+                    navigation.navigate('Create', { targetIndex: storeIndex, targetData: item, type: 'target' });
                 }}
             />
         </>
@@ -107,7 +107,7 @@ const Target = ({ item, index }: TargetProps) => {
 };
 
 interface TargetListProps {
-    Data: Data[];
+    Data: { item: Data; storeIndex: number }[];
 }
 
 export const TargetList = ({ Data }: TargetListProps) => {
@@ -115,11 +115,11 @@ export const TargetList = ({ Data }: TargetListProps) => {
         <View style={styles.container}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={styles.title}>Прогресс дня</Text>
-                <Text style={styles.subTitle}>{`${Data.filter(item => item.lastCompleted === today).length}/${Data.length}`}</Text>
+                <Text style={styles.subTitle}>{`${Data.filter(({ item }) => item.lastCompleted === today).length}/${Data.length}`}</Text>
             </View>
-            
-            {Data.map((item, index) => (
-                <Target key={index} item={item as any} index={index} />
+
+            {Data.map(({ item, storeIndex }) => (
+                <Target key={storeIndex} item={item as any} storeIndex={storeIndex} />
             ))}
         </View>
     );
