@@ -178,7 +178,7 @@ const Target = ({ item, index, storeIndex }: TargetProps) => {
             />
             <Modal
                 title="Выполнено!"
-                message={`Засчитать «${item.name}»? Получишь ${balls} баллов.`}
+                message={`Засчитать «${item.name}»?`}
                 buttonTitle="Да, готово!"
                 visible={isCompleteModal}
                 onClose={() => setIsCompleteModal(false)}

@@ -8,21 +8,22 @@ interface ModalProps {
     visible: boolean;
     onClose: () => void,
     onConfirm?: () => void,
+    onReset?: () => void,
     title: string,
     message: string,
     buttonTitle: string
 }
 
-export const Modal = ({visible, onClose, title, message, buttonTitle, onConfirm}: ModalProps) => {
+export const Modal = ({visible, onClose, title, message, buttonTitle, onConfirm, onReset}: ModalProps) => {
     return (
         <ModalBase
             visible={visible}
             transparent={true}
             statusBarTranslucent
             animationType='fade'
-        >   
+        >
             <Pressable onPress={onClose} style={styles.background}>
-                <Pressable 
+                <Pressable
                     style={styles.container}
                     onPress={(e) => e.stopPropagation()}
                 >
@@ -30,6 +31,9 @@ export const Modal = ({visible, onClose, title, message, buttonTitle, onConfirm}
                     <Text style={styles.title}>{title}</Text>
                     <Text style={styles.message}>{message}</Text>
                     <Button title={buttonTitle} containerStyle={styles.button} onClick={onConfirm ? onConfirm : onClose}/>
+                    {onReset && (
+                        <Button title="Reset progress" containerStyle={styles.resetButton} textStyle={styles.resetText} onClick={onReset}/>
+                    )}
                 </Pressable>
             </Pressable>
         </ModalBase>
@@ -47,18 +51,29 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '100%',
-        height: 250,
         backgroundColor: ProjectColors.white,
         borderRadius: 25,
         paddingHorizontal: 24,
         paddingVertical: 16,
-        justifyContent: 'space-between',
+        gap: 8,
     },
     button: {
         width: '100%',
         height: 40,
         alignSelf: 'center',
         borderRadius: 10
+    },
+    resetButton: {
+        width: '100%',
+        height: 40,
+        alignSelf: 'center',
+        borderRadius: 10,
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderColor: ProjectColors.black,
+    },
+    resetText: {
+        color: ProjectColors.black,
     },
     title: {
         fontFamily: 'StackSansTextVariableFont',

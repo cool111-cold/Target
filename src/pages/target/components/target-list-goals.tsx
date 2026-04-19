@@ -35,9 +35,12 @@ interface Data {
 interface GoalCardProps {
     item: Data;
     storeIndex: number;
+    fullWidth?: boolean;
 }
 
-const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
+const FULL_WIDTH = width - PAGE_PADDING * 2;
+
+const BigGoalCard = ({ item, storeIndex, fullWidth }: GoalCardProps) => {
     const [isEditModal, setIsEditModal] = useState(false);
     const [isCompleteModal, setIsCompleteModal] = useState(false);
     const removeTarget = useAppStore(s => s.removeTarget);
@@ -62,7 +65,7 @@ const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
     return (
         <>
             <View
-                style={[styles.card, { backgroundColor: ProjectColors.black }]}
+                style={[styles.card, { backgroundColor: ProjectColors.black, width: fullWidth ? FULL_WIDTH : CARD_WIDTH }]}
             >
                 <TouchableOpacity
                     style={styles.editHit}
@@ -89,7 +92,7 @@ const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
                     activeOpacity={0.75}
                 >
                     <CheckIcon size={20} color={ProjectColors.white} />
-                    <Text style={styles.completeBtnText}>Достичь!</Text>
+                    <Text style={styles.completeBtnText}>Завершить</Text>
                 </TouchableOpacity>
             </View>
 
@@ -105,8 +108,8 @@ const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
                 }}
             />
             <Modal
-                title="Достигнуто!"
-                message={`Засчитать «${item.name}»? Получишь ${balls} баллов.`}
+                title="Завершить"
+                message={`Засчитать «${item.name}»?`}
                 buttonTitle="Да, достиг!"
                 visible={isCompleteModal}
                 onClose={() => setIsCompleteModal(false)}
@@ -116,7 +119,7 @@ const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
     );
 };
 
-const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
+const ProgressiveCard = ({ item, storeIndex, fullWidth }: GoalCardProps) => {
     const [isEditModal, setIsEditModal] = useState(false);
     const [isProgressModal, setIsProgressModal] = useState(false);
     const [isCompleteModal, setIsCompleteModal] = useState(false);
@@ -156,7 +159,7 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
 
     return (
         <>
-            <View style={[styles.card, { backgroundColor: '#1a1a2e' }]}>
+            <View style={[styles.card, { backgroundColor: '#1a1a2e', width: fullWidth ? FULL_WIDTH : CARD_WIDTH }]}>
                 <TouchableOpacity
                     style={styles.editHit}
                     onLongPress={() => { Vibration.vibrate(10); setIsEditModal(true); }}
@@ -240,8 +243,8 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
             </RNModal>
 
             <Modal
-                title="Достигнуто!"
-                message={`Засчитать «${item.name}»? Получишь ${balls} баллов.`}
+                title="Выполнить"
+                message={`Засчитать «${item.name}»?`}
                 buttonTitle="Да, достиг!"
                 visible={isCompleteModal}
                 onClose={() => setIsCompleteModal(false)}
@@ -258,20 +261,22 @@ interface GoalListProps {
 export const GoalTargetList = ({ Data }: GoalListProps) => {
     if (!Data.length) return null;
 
+    const isSingle = Data.length === 1;
+
     return (
         <View style={styles.container}>
-            {/* <Text style={styles.sectionTitle}>Цели</Text> */}
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                snapToOffsets={Data.map((_, i) => i === 0 ? 0 : i * (CARD_WIDTH + CARD_GAP) - PAGE_PADDING)}
+                scrollEnabled={!isSingle}
+                snapToOffsets={isSingle ? undefined : Data.map((_, i) => i === 0 ? 0 : i * (CARD_WIDTH + CARD_GAP) - PAGE_PADDING)}
                 decelerationRate="fast"
                 contentContainerStyle={styles.scrollContent}
             >
                 {Data.map(({ item, storeIndex }) =>
                     item.type === TARGET_TYPE_IDS.BIG_GOAL
-                        ? <BigGoalCard key={storeIndex} item={item} storeIndex={storeIndex} />
-                        : <ProgressiveCard key={storeIndex} item={item} storeIndex={storeIndex} />
+                        ? <BigGoalCard key={storeIndex} item={item} storeIndex={storeIndex} fullWidth={isSingle} />
+                        : <ProgressiveCard key={storeIndex} item={item} storeIndex={storeIndex} fullWidth={isSingle} />
                 )}
             </ScrollView>
         </View>

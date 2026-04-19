@@ -72,7 +72,7 @@ const Target = ({ item, storeIndex }: TargetProps) => {
 
                 <View style={styles.rowContent}>
                     <View style={styles.rowLeft}>
-                        <DailyIcon size={18} color={ProjectColors.black} />
+                        {/* <DailyIcon size={18} color={ProjectColors.black} /> */}
                         <Text style={styles.rowName} numberOfLines={1}>{item.name}</Text>
                     </View>
 
@@ -104,6 +104,11 @@ const Target = ({ item, storeIndex }: TargetProps) => {
                 onConfirm={() => {
                     setIsModal(false);
                     navigation.navigate('Create', { targetIndex: storeIndex, targetData: item, type: 'target' });
+                }}
+                onReset={() => {
+                    setIsModal(false);
+                    updateTarget(storeIndex, { ...item, lastCompleted: undefined } as any);
+                    setMarkedToday(false);
                 }}
             />
         </>
