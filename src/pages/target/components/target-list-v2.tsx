@@ -7,6 +7,7 @@ import { Modal } from "../../../feauters/modal";
 import { useAppStore } from "../../../hooks/store";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationProp } from "../../main/components/links-block";
+import { useTargetBalls } from "../../../hooks/use-target-balls";
 
 interface Data {
     name: string;
@@ -33,19 +34,22 @@ const Target = ({ item, storeIndex }: TargetProps) => {
     const [isModal, setIsModal] = useState(false);
     const [markedToday, setMarkedToday] = useState(item.lastCompleted === today);
     const addHistoryItem = useAppStore(s => s.addHistoryItem);
+    const incrementRewards = useAppStore(s => s.incrementRewards);
     const updateTarget = useAppStore(s => s.updateTarget);
     const removeTarget = useAppStore(s => s.removeTarget);
     const navigation = useNavigation<NavigationProp>();
     const isProcessingRef = useRef(false);
 
+    const balls = useTargetBalls(item.type as any, item.difficulty, item.data);
     const accentColor = DIFFICULTY_COLORS[item.difficulty] ?? ProjectColors.lightGrey;
 
-    const handlePlusPress = () => {
+    const handlePlusPress = async () => {
         if (isProcessingRef.current || markedToday) return;
         isProcessingRef.current = true;
         Vibration.vibrate(10);
 
-        addHistoryItem({ name: item.name, date: today, price: item.ball, type: 'target' });
+        await incrementRewards(10, balls);
+        await addHistoryItem({ name: item.name, date: today, price: balls, type: 'target' });
 
         if (item.type === 'Disposable') {
             removeTarget(storeIndex);

@@ -12,6 +12,7 @@ import { useAppStore } from "../../../hooks/store";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationProp } from "../../main/components/links-block";
 import { TARGET_TYPE_IDS } from "./create-type-button";
+import { useTargetBalls } from "../../../hooks/use-target-balls";
 
 const { width } = Dimensions.get('window');
 const PAGE_PADDING = 24;
@@ -44,14 +45,16 @@ const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
     const addHistoryItem = useAppStore(s => s.addHistoryItem);
     const navigation = useNavigation<NavigationProp>();
 
+    const balls = useTargetBalls(item.type, item.difficulty, item.data);
+
     const confirmComplete = async () => {
         setIsCompleteModal(false);
-        await incrementRewards(10, item.ball);
+        await incrementRewards(10, balls);
         await addHistoryItem({
             name: item.name,
             date: new Date().toLocaleDateString('ru-RU'),
             type: 'target',
-            price: item.ball,
+            price: balls,
         });
         await removeTarget(storeIndex);
     };
@@ -103,7 +106,7 @@ const BigGoalCard = ({ item, storeIndex }: GoalCardProps) => {
             />
             <Modal
                 title="Достигнуто!"
-                message={`Засчитать «${item.name}»? Получишь ${item.ball} баллов.`}
+                message={`Засчитать «${item.name}»? Получишь ${balls} баллов.`}
                 buttonTitle="Да, достиг!"
                 visible={isCompleteModal}
                 onClose={() => setIsCompleteModal(false)}
@@ -124,6 +127,7 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
     const addHistoryItem = useAppStore(s => s.addHistoryItem);
     const navigation = useNavigation<NavigationProp>();
 
+    const balls = useTargetBalls(item.type, item.difficulty, item.data);
     const current = item.ephir ?? 0;
     const goal = item.goalValue ?? 0;
     const progress = goal > 0 ? Math.min(current / goal, 1) : 0;
@@ -140,12 +144,12 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
 
     const confirmComplete = async () => {
         setIsCompleteModal(false);
-        await incrementRewards(10, item.ball);
+        await incrementRewards(10, balls);
         await addHistoryItem({
             name: item.name,
             date: new Date().toLocaleDateString('ru-RU'),
             type: 'target',
-            price: item.ball,
+            price: balls,
         });
         await removeTarget(storeIndex);
     };
@@ -237,7 +241,7 @@ const ProgressiveCard = ({ item, storeIndex }: GoalCardProps) => {
 
             <Modal
                 title="Достигнуто!"
-                message={`Засчитать «${item.name}»? Получишь ${item.ball} баллов.`}
+                message={`Засчитать «${item.name}»? Получишь ${balls} баллов.`}
                 buttonTitle="Да, достиг!"
                 visible={isCompleteModal}
                 onClose={() => setIsCompleteModal(false)}

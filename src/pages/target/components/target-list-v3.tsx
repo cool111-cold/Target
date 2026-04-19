@@ -13,6 +13,7 @@ import { BigGoalIcon } from "../../../../assets/icons/big-goal-icon";
 import { DurationIcon } from "../../../../assets/icons/duration-icon";
 import { ProgressiveIcon } from "../../../../assets/icons/progressive-icon";
 import { CheckIcon } from "../../../../assets/icons/check-icon";
+import { useTargetBalls } from "../../../hooks/use-target-balls";
 
 const { width } = Dimensions.get('window');
 
@@ -88,6 +89,7 @@ const Target = ({ item, index, storeIndex }: TargetProps) => {
     const incrementRewards = useAppStore(s => s.incrementRewards);
     const addHistoryItem = useAppStore(s => s.addHistoryItem);
 
+    const balls = useTargetBalls(item.type, item.difficulty, item.data);
     const cardHeight = CARD_HEIGHTS[index % CARD_HEIGHTS.length];
     const theme = TYPE_THEMES[item.type] ?? DEFAULT_THEME;
     const difficultyColor = getDifficultyColor(item.difficulty);
@@ -101,12 +103,12 @@ const Target = ({ item, index, storeIndex }: TargetProps) => {
 
     const confirmComplete = async () => {
         setIsCompleteModal(false);
-        await incrementRewards(10, item.ball);
+        await incrementRewards(10, balls);
         await addHistoryItem({
             name: item.name,
             date: new Date().toLocaleDateString('ru-RU'),
             type: 'target',
-            price: item.ball,
+            price: balls,
         });
         await removeTarget(storeIndex);
     };
@@ -176,7 +178,7 @@ const Target = ({ item, index, storeIndex }: TargetProps) => {
             />
             <Modal
                 title="Выполнено!"
-                message={`Засчитать «${item.name}»? Получишь ${item.ball} баллов.`}
+                message={`Засчитать «${item.name}»? Получишь ${balls} баллов.`}
                 buttonTitle="Да, готово!"
                 visible={isCompleteModal}
                 onClose={() => setIsCompleteModal(false)}

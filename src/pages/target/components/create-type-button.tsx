@@ -33,7 +33,7 @@ export const TARGET_TYPE_IDS = {
     DURATION: 4,
     PROGRESSIVE: 5,
 } as const
-
+// 
 const TARGET_TYPES: {
     id: number
     nameKey: keyof Language
