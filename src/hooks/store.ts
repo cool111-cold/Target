@@ -16,11 +16,12 @@ interface targetData {
     ball: number;
     ephir: number;
     data: string;
-    type: string;
+    type: number;
     color: number;
     difficulty?: string;
     dueDate?: string;
     goalValue?: number;
+    lastCompleted?: string;
 }
 
 interface prizeData {

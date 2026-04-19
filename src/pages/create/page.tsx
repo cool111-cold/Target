@@ -6,7 +6,8 @@ import { TargenCreateTypeButton } from "../target/components/create-type-button"
 import { TargetCreateNameInput } from "../target/components/create-name-input";
 import { TargetBallPicker } from "../target/components/create-ball";
 import { TargetCreateNameDescriptionInput } from "../target/components/create-name-description-input";
-import { TargetCreateDifficultyButton } from "../target/components/create-difficulty-button";
+import { TargetCreateDifficultyButton, DIFFICULTY_IDS } from "../target/components/create-difficulty-button";
+import { TARGET_TYPE_IDS } from "../target/components/create-type-button";
 import { TargetCreateDatePicker } from "../target/components/create-date-picker";
 import { TargetCreateProgressiveGoalInput } from "../target/components/create-progressive-goal-input";
 import { useAppStore } from "../../hooks/store";
@@ -43,16 +44,16 @@ export const CreatePage = () => {
     const labelStepGoalMsg = t('stepGoalMessage');
 
     const selectedType = answers.find(a => a.questionId === 1)?.value;
-    const isBigGoal = selectedType === 'Крупная цель';
+    const isBigGoal = selectedType === TARGET_TYPE_IDS.BIG_GOAL;
 
     const extraStep = (() => {
-        if (selectedType === 'Напоминания') {
+        if (selectedType === TARGET_TYPE_IDS.REMINDER) {
             return { title: labelStepDate, message: labelStepDateMsg, id: 2, Component: TargetCreateDateTimePicker };
         }
-        if (selectedType === 'Продолжительная цель') {
+        if (selectedType === TARGET_TYPE_IDS.DURATION) {
             return { title: labelStepDate, message: labelStepDateMsg, id: 2, Component: TargetCreateDatePicker };
         }
-        if (selectedType === 'Прогрессивная цель') {
+        if (selectedType === TARGET_TYPE_IDS.PROGRESSIVE) {
             return { title: labelStepGoal, message: labelStepGoalMsg, id: 2, Component: TargetCreateProgressiveGoalInput };
         }
         return null;
@@ -137,9 +138,9 @@ export const CreatePage = () => {
                     name: nameDesc?.name ?? '',
                     description: nameDesc?.description ?? '',
                     type: selectedType,
-                    difficulty: isBigGoal ? 'Эпическая' : answers.find(a => a.questionId === 3)?.value,
-                    dueDate: (selectedType === 'Напоминания' || selectedType === 'Продолжительная цель') ? extraValue : undefined,
-                    goalValue: selectedType === 'Прогрессивная цель' ? extraValue : undefined,
+                    difficulty: isBigGoal ? DIFFICULTY_IDS.EPIC : answers.find(a => a.questionId === 3)?.value,
+                    dueDate: (selectedType === TARGET_TYPE_IDS.REMINDER || selectedType === TARGET_TYPE_IDS.DURATION) ? extraValue : undefined,
+                    goalValue: selectedType === TARGET_TYPE_IDS.PROGRESSIVE ? extraValue : undefined,
                     data: new Date().toLocaleDateString("ru-RU").toString(),
                     ball: targetData?.ball || 0,
                     color: targetData?.color || 0,

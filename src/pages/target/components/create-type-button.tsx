@@ -25,50 +25,59 @@ if (Platform.OS === 'android') {
 
 const ICON_SIZE = 32
 
+export const TARGET_TYPE_IDS = {
+    DAILY: 0,
+    ONE_TIME: 1,
+    REMINDER: 2,
+    BIG_GOAL: 3,
+    DURATION: 4,
+    PROGRESSIVE: 5,
+} as const
+
 const TARGET_TYPES: {
-    id: string
+    id: number
     nameKey: keyof Language
     descriptionKey: keyof Language
     renderIcon: (color: string) => React.JSX.Element
     example: string[]
 }[] = [
     {
-        id: 'Ежедневная цель',
+        id: TARGET_TYPE_IDS.DAILY,
         nameKey: 'typeDailyName',
         descriptionKey: 'typeDailyDesc',
         renderIcon: (color: string) => <DailyIcon size={ICON_SIZE} color={color} />,
         example: ['Почистить зубы', 'Приготовить ужин', 'Вовремя лечь', 'Погладить кошку']
     },
     {
-        id: 'Одноразовая',
+        id: TARGET_TYPE_IDS.ONE_TIME,
         nameKey: 'typeOneTimeName',
         descriptionKey: 'typeOneTimeDesc',
         renderIcon: (color: string) => <OneTimeIcon size={ICON_SIZE} color={color} />,
         example: ['Сходить к врачу', 'Купить молоко', 'Подстричься', 'Убраться в квартире']
     },
     {
-        id: 'Напоминания',
+        id: TARGET_TYPE_IDS.REMINDER,
         nameKey: 'typeReminderName',
         descriptionKey: 'typeReminderDesc',
         renderIcon: (color: string) => <ReminderIcon size={ICON_SIZE} color={color} />,
         example: ['Поздравить маму с днем рождения', 'Забрать вещи с хичистки', 'Забрать посылку с пункта выдачи', 'Купить корм кошке после работы']
     },
     {
-        id: 'Крупная цель',
+        id: TARGET_TYPE_IDS.BIG_GOAL,
         nameKey: 'typeBigGoalName',
         descriptionKey: 'typeBigGoalDesc',
         renderIcon: (color: string) => <BigGoalIcon size={ICON_SIZE} color={color} />,
         example: ['Защитить диплом', 'Основать стартап', 'Получить внж в стране мечты', 'Выйти замуж']
     },
     {
-        id: 'Продолжительная цель',
+        id: TARGET_TYPE_IDS.DURATION,
         nameKey: 'typeDurationName',
         descriptionKey: 'typeDurationDesc',
         renderIcon: (color: string) => <DurationIcon size={ICON_SIZE} color={color} />,
         example: ['Месяц не пропускать пары', 'Неделя без сладкого', 'Месяц экономии', 'Неделя изучения языков']
     },
     {
-        id: 'Прогрессивная цель',
+        id: TARGET_TYPE_IDS.PROGRESSIVE,
         nameKey: 'typeProgressiveName',
         descriptionKey: 'typeProgressiveDesc',
         renderIcon: (color: string) => <ProgressiveIcon size={ICON_SIZE} color={color} />,
@@ -82,7 +91,7 @@ const CARD_SIZE = (SCREEN_WIDTH - 48 - CARD_GAP) / 2
 const FULL_WIDTH = CARD_SIZE * 2 + CARD_GAP
 
 type LocalizedItem = {
-    id: string
+    id: number
     displayName: string
     displayDescription: string
     renderIcon: (color: string) => React.JSX.Element
@@ -129,7 +138,7 @@ const RowPair = ({ pair, currentValue, onValueChange, examplePrefix }: RowPairPr
         ]).start()
     }, [currentValue])
 
-    const handlePress = (id: string) => {
+    const handlePress = (id: number) => {
         onValueChange(currentValue === id ? null : id)
     }
 

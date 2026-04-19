@@ -1,29 +1,35 @@
 import { ScrollView, StyleSheet, View } from "react-native"
 import { CalendarBlock } from "../main/components/calendar";
-import { ChoiceBar } from "./components/choice-bar";
-import { Ephir } from "./components/ephir";
-import { TargetList } from "./components/target-list";
-import { useState } from "react";
+import { TargetList } from "./components/target-list-v2";
+import { TargetList as TargetListV } from "./components/target-list-v3";
+import { GoalTargetList } from "./components/target-list-goals";
 import { AddButton } from "../../components/add-button";
 import { useAppStore } from "../../hooks/store";
+import { TARGET_TYPE_IDS } from "../target/components/create-type-button";
+
 
 export const TargetPage = () => {
-    const [activeFilter, setActiveFilter] = useState('Все');
+    // const [activeFilter, setActiveFilter] = useState('Все');
 
     const userData = useAppStore((s) => s.userData);
     const TestData = userData?.targets
 
-    const filteredData = activeFilter === 'Все'
-        ? TestData
-        : TestData?.filter(item => item.type === activeFilter);
+    const DailyItems = TestData?.filter(item => item.type === TARGET_TYPE_IDS.DAILY)
+    const MainItems = TestData
+        ?.map((item, storeIndex) => ({ item, storeIndex }))
+        .filter(({ item }) => item.type === TARGET_TYPE_IDS.ONE_TIME || item.type === TARGET_TYPE_IDS.REMINDER || item.type === TARGET_TYPE_IDS.DURATION)
+
+    const GoalItems = TestData
+        ?.map((item, storeIndex) => ({ item, storeIndex }))
+        .filter(({ item }) => item.type === TARGET_TYPE_IDS.BIG_GOAL || item.type === TARGET_TYPE_IDS.PROGRESSIVE)
 
     return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <CalendarBlock />
-        <ChoiceBar active={activeFilter} setActive={setActiveFilter} />
-        <Ephir />
-        {filteredData && filteredData.length > 0 && <TargetList Data={filteredData} />}
+        {GoalItems && GoalItems.length > 0 && <GoalTargetList Data={GoalItems as any} />}
+        {DailyItems && DailyItems.length > 0 && <TargetList Data={DailyItems as any} />}
+        {MainItems && MainItems.length > 0 && <TargetListV Data={MainItems as any} />}
       </ScrollView>
       <AddButton type='target' />
     </View>

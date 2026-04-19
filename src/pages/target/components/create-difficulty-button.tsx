@@ -1,43 +1,79 @@
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { ProjectColors } from "../../../../assets/colors"
 import React from "react"
 import { EphirIcon } from "../../../../assets/icons/ephir"
 
-const DIFFICULTIES = ['Лёгкая', 'Средняя', 'Сложная', 'Эпическая']
-const ICON_SIZES = [64, 64, 64, 64]
-const COLORS = ['#3be368', '#d2e33b', '#ab3be3', '#e33b54']
+export const DIFFICULTY_IDS = {
+    EASY: 0,
+    MEDIUM: 1,
+    HARD: 2,
+    EPIC: 3,
+} as const
+
+const DIFFICULTIES: {
+    id: number;
+    label: string;
+    sublabel: string;
+    color: string;
+    count: number;
+}[] = [
+    { id: DIFFICULTY_IDS.EASY,   label: 'Легко',     sublabel: 'без усилий',   color: '#3be368', count: 1 },
+    { id: DIFFICULTY_IDS.MEDIUM, label: 'Средне',    sublabel: 'немного сил',  color: '#d2e33b', count: 2 },
+    { id: DIFFICULTY_IDS.HARD,   label: 'Сложно',    sublabel: 'нужен настрой',color: '#ab3be3', count: 3 },
+    { id: DIFFICULTY_IDS.EPIC,   label: 'Эпично',    sublabel: 'максимум',     color: '#e33b54', count: 4 },
+]
 
 const CARD_GAP = 12
 const SCREEN_WIDTH = Dimensions.get('window').width
-const CARD_SIZE = (SCREEN_WIDTH - 48 - CARD_GAP)
+const CARD_SIZE = (SCREEN_WIDTH - 48 - CARD_GAP) / 2
 
-const IconLayout = ({ count, size, color }: { count: number; size: number; color: string }) => {
-    const icon = (key: number) => <EphirIcon key={key} size={size} color={color} />
-    const row = (keys: number[]) => (
-        <View style={styles.iconRow}>
-            {keys.map(k => icon(k))}
-        </View>
-    )
+const Icons = ({ count, color }: { count: number; color: string }) => (
+    <View style={styles.iconsRow}>
+        {Array.from({ length: count }).map((_, i) => (
+            <EphirIcon key={i} size={28} color={color} />
+        ))}
+    </View>
+)
 
-    if (count === 1) return <View style={styles.iconContainer}>{row([0])}</View>
-    if (count === 2) return <View style={styles.iconContainer}>{row([0, 1])}</View>
-    if (count === 3) return <View style={styles.iconContainer}>{row([0, 1, 2])}</View>
-    return <View style={styles.iconContainer}>{row([0, 1, 2, 3])}</View>
-}
-
-export const TargetCreateDifficultyButton = ({ onValueChange, currentValue }: { onValueChange: (value: any) => void, currentValue?: any }) => {
+export const TargetCreateDifficultyButton = ({
+    onValueChange,
+    currentValue,
+}: {
+    onValueChange: (value: any) => void
+    currentValue?: any
+}) => {
     return (
-        <View style={styles.container}>
-            {DIFFICULTIES.map((item, index) => {
-                const isSelected = currentValue === item
-                const iconColor = ProjectColors.black
+        <View style={styles.grid}>
+            {DIFFICULTIES.map((d) => {
+                const selected = currentValue === d.id
                 return (
                     <TouchableOpacity
-                        style={[styles.button, { backgroundColor: isSelected ? COLORS[index] : ProjectColors.white }]}
-                        onPress={() => onValueChange(item)}
-                        key={index}
+                        key={d.id}
+                        style={[
+                            styles.card,
+                            {
+                                backgroundColor: selected ? ProjectColors.black : ProjectColors.white,
+                            },
+                        ]}
+                        onPress={() => onValueChange(d.id)}
+                        activeOpacity={0.8}
                     >
-                        <IconLayout count={index + 1} size={ICON_SIZES[index]} color={iconColor} />
+                        <Icons count={d.count} color={selected ? ProjectColors.white : ProjectColors.black} />
+
+                        <View style={styles.labels}>
+                            <Text style={[styles.label, { color: selected ? ProjectColors.white : ProjectColors.black }]}>
+                                {d.label}
+                            </Text>
+                            <Text style={[styles.sublabel, {
+                                color: selected ? ProjectColors.darkGrey : ProjectColors.darkGrey
+                            }]}>
+                                {d.sublabel}
+                            </Text>
+                        </View>
+
+                        {/* {!selected && ( */}
+                            <View style={[styles.colorDot, { backgroundColor: d.color }]} />
+                        {/* )} */}
                     </TouchableOpacity>
                 )
             })}
@@ -46,29 +82,43 @@ export const TargetCreateDifficultyButton = ({ onValueChange, currentValue }: { 
 }
 
 const styles = StyleSheet.create({
-    container: {
+    grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: CARD_GAP,
     },
-    button: {
+    card: {
         width: CARD_SIZE,
-        height: CARD_SIZE / 4,
+        height: CARD_SIZE,
         borderWidth: 2,
-        borderColor: ProjectColors.black,
-        borderRadius: 18,
-        alignItems: 'center',
-        justifyContent: 'center',
+        borderRadius: 24,
+        padding: 18,
+        justifyContent: 'space-between',
     },
-    iconContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 6,
-    },
-    iconRow: {
+    iconsRow: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 6,
+        gap: 4,
+        flexWrap: 'wrap',
+    },
+    labels: {
+        gap: 2,
+    },
+    label: {
+        fontFamily: 'StackSansTextVariableFont',
+        fontWeight: '700',
+        fontSize: 18,
+    },
+    sublabel: {
+        fontFamily: 'StackSansTextVariableFont',
+        fontWeight: '400',
+        fontSize: 12,
+    },
+    colorDot: {
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        width: 10,
+        height: 10,
+        borderRadius: 5,
     },
 })
