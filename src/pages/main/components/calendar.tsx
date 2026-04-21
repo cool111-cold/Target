@@ -12,11 +12,12 @@ export const CalendarBlock = () => {
   return (
     <TouchableOpacity>
       <View style={styles.calendarBlock}>
-        <Text style={styles.text}>{`${t(DAYS[date.getDay()] as dateType)}, ${date.getDate()}`}</Text>
+        {/* <Text style={styles.text}>{`${t(DAYS[date.getDay()] as dateType)}, ${date.getDate()}`}</Text>
         <Text style={styles.miniText}>{`${date.getDay() === 0 ? '7' : date.getDay()}/7`}</Text>
         <View style={styles.iconBlock}>
           <ArrowRight />
-        </View>
+        </View> */}
+        <Text style={styles.text}>Вадим</Text>
       </View>
     </TouchableOpacity>
   );
@@ -42,6 +43,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     flexDirection: 'row',
     position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   iconBlock: {
     position: 'absolute',

@@ -115,7 +115,7 @@ export default function App() {
           }
           <Stack.Screen name="Home" component={MainPage} />
           <Stack.Screen name="Target" component={TargetPage} />
-          <Stack.Screen name="Cupons" component={CuponPage} />
+          <Stack.Screen name="Cupons" component={TargetPage} />
           <Stack.Screen name="Prize" component={PrizePage} />
           <Stack.Screen name="Create" component={CreatePage} />
           <Stack.Screen name="Test" component={TestPage} />

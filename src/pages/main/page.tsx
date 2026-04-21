@@ -6,6 +6,7 @@ import { TestBlock } from "./components/test-block";
 import { useEffect } from "react";
 import { useAppStore } from '../../hooks/store';
 import { BalanceSlider } from './components/balance-slider';
+import { PixelCat } from '../../components/pixel-cat';
 
 const { width } = Dimensions.get('window');
 
@@ -21,10 +22,11 @@ export const MainPage = () => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <CalendarBlock />
-        <BalanceSlider />
-        <TestBlock />
-        <LinksBlock />
-        <MainTasks />
+        <PixelCat />
+        {/* <BalanceSlider /> */}
+        {/* <TestBlock /> */}
+        {/* <LinksBlock /> */}
+        {/* <MainTasks /> */}
       </ScrollView>
     </View>
     )
